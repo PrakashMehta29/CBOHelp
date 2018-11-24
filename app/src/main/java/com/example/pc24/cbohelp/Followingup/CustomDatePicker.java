@@ -19,7 +19,7 @@ public class CustomDatePicker implements DatePickerDialog.OnDateSetListener{
     private ICustomDatePicker listener = null;
     private Date minDate;
     private Date maxDate;
-    private Context context;
+
 
     public static Date getDate(String date,String format) throws java.text.ParseException {
         SimpleDateFormat format_new = new SimpleDateFormat(format);
