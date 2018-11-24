@@ -10,8 +10,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.widget.DatePicker;
 
-import com.example.pc24.cbohelp.FollowUp.IFollowup;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -22,7 +20,10 @@ public class CustomDatePicker implements DatePickerDialog.OnDateSetListener{
     private Date minDate;
     private Date maxDate;
     private Context context;
-
+    dlvc
+    dfkfd
+        gjhgj
+    
 
     public static Date getDate(String date,String format) throws java.text.ParseException {
         SimpleDateFormat format_new = new SimpleDateFormat(format);
