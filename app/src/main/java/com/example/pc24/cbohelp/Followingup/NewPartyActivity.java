@@ -59,7 +59,7 @@ public class NewPartyActivity extends AppCompatActivity implements SearchView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+/*
         setContentView(R.layout.actvity_party_layout);
         followupdate = (TextView) findViewById(R.id.followdate);
         nextfollowupdate = (TextView) findViewById(R.id.nextfollowdate);
@@ -70,7 +70,7 @@ public class NewPartyActivity extends AppCompatActivity implements SearchView.On
         PartyTxt = (TextView) findViewById(R.id.party_name);
         Lmissedtype = (LinearLayout) findViewById(R.id.layout_party);
         recyclerView = (RecyclerView) findViewById(R.id.followinguplist);
-        Gobtn = (Button) findViewById(R.id.btn_go);
+        Gobtn = (Button) findViewById(R.id.btn_go);*/
 
         radioGroup = (RadioGroup) findViewById(R.id.viewby);
         entrydate = (RadioButton) findViewById(R.id.entrydate);
