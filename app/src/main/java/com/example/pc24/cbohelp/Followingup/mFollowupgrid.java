@@ -63,13 +63,8 @@ public class mFollowupgrid {
         this.uSER1NAME = uSER1NAME;
     }
 
-    public String getsRNO() {
-        return sRNO;
-    }
 
-    public void setsRNO(String sRNO) {
-        this.sRNO = sRNO;
-    }
+
 
     public String getpANAME() {
         return pANAME;
