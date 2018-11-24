@@ -23,7 +23,6 @@ public class CustomDatePicker implements DatePickerDialog.OnDateSetListener{
     private Date maxDate;
     private Context context;
 
-    private IFollowup iFollowup;
 
     public static Date getDate(String date,String format) throws java.text.ParseException {
         SimpleDateFormat format_new = new SimpleDateFormat(format);
