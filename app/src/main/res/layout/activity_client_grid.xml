@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_client__account"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="#444"
+        android:dividerHeight="1dp"
+        android:id="@+id/client_account_list"
+        android:layout_below="@+id/hed"
+        android:layout_above="@+id/foot"
+        android:descendantFocusability="afterDescendants"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+    </ListView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="3"
+        android:background="@color/headerBg"
+        android:paddingLeft="3dp"
+        android:paddingRight="3dp"
+        android:id="@+id/hed"
+        android:orientation="horizontal"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <TextView
+            android:layout_width="match_parent"
+            style="@style/Header_text_left"
+            android:text="Party Name"
+            android:paddingTop="7dp"
+            android:paddingBottom="7dp"
+            android:layout_weight="1"/>
+        <View
+            android:layout_width="0.8dp"
+            android:layout_height="fill_parent"
+            android:background="#444"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            style="@style/Header_text_right"
+            android:text="Support"
+            android:layout_weight="2"/>
+
+
+    </LinearLayout>
+
+</RelativeLayout>
+

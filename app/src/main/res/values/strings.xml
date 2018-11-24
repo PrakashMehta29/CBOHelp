@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">CBO Help</string>
+    <string name="search_hint">Company Name</string>
+    <string name="action_settings">LOGOUT</string>
+
+    <string name="service_unavilable">We are facing some technical issues. We will have it resolved shortly so please try again after some time. If possible, do send a screenshot to support@cboinfotech.com. \n</string>
+    <string name="try_later">Please try after sometime.</string>
+    <string name="rs">\u20B9 </string>
+
+    <string name="Internet_error">Connection timeout. Please try after some time or Switch ON/OFF your Internet \n</string>
+
+    <string-array name="planets_array">
+        <item>Mercury</item>
+        <item>Venus</item>
+        <item>Earth</item>
+        <item>Mars</item>
+        <item>Jupiter</item>
+        <item>Saturn</item>
+        <item>Uranus</item>
+        <item>Neptune</item>
+    </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

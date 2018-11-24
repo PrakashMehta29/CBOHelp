@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <item
+        android:id="@+id/menu_search"
+        android:title="Search"
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/add_party"
+        android:orderInCategory="200"
+        android:title="Filter"
+        app:showAsAction="always"
+        android:icon="@drawable/add_button"/>
+
+    <item
+        android:id="@+id/all"
+        android:title="All"
+        />
+
+
+    <item
+        android:id="@+id/done"
+
+        android:title="Done"/>
+    <item
+        android:id="@+id/inProcess"
+        android:title="InProcess"
+        />
+
+
+
+    <item
+        android:id="@+id/notInterested"
+        android:title="Not Intrested"
+        />
+
+</menu>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<color name="colorPrimary">#2196F3</color>
+<color name="colorPrimaryDark">#1976D2</color>
+<color name="colorAccent">#1976D2</color>
+<color name="headerBg">#5999</color>
+<color name="hyperLink">#3e60F3</color>
+<color name="textcolor">#000000</color>
+<color name="active_filter">#fff</color>
+</resources>
+
+
+
+<!--
+
+<color name="colorPrimary">#00afef</color>
+<color name="colorPrimaryDark">#3e4095</color>
+<color name="colorAccent">#3e4095</color>
+<color name="headerBg">#5999</color>
+<color name="hyperLink">#3e60F3</color>
+<color name="textcolor">#000000</color>
+<color name="active_filter">#fff</color>-->

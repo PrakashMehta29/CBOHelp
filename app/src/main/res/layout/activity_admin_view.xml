@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_order__list"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="3"
+        android:paddingLeft="3dp"
+        android:paddingRight="3dp"
+        android:id="@+id/tab"
+        android:orientation="horizontal"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:textColor="#fff"
+            android:textStyle="bold"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            android:layout_marginTop="3dp"
+            android:elevation="6dp"
+            android:id="@+id/pending"
+            android:background="@drawable/tab_selected"
+            android:text="pending"
+            android:layout_weight="1"/>
+
+        <View
+            android:layout_width="0.8dp"
+            android:layout_height="fill_parent"
+            android:visibility="gone"
+            android:background="#444"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:textColor="#fff"
+            android:textStyle="bold"
+            android:layout_marginLeft="3dp"
+            android:layout_marginRight="3dp"
+            android:layout_marginTop="3dp"
+            android:id="@+id/complete"
+            android:background="@drawable/tab_deselected"
+            android:text="Completed"
+            android:layout_weight="1"/>
+
+        <View
+            android:layout_width="0.8dp"
+            android:layout_height="fill_parent"
+            android:visibility="gone"
+            android:background="#444"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:text="All"
+            android:id="@+id/all"
+            android:textColor="#fff"
+            android:layout_marginLeft="3dp"
+            android:layout_marginRight="3dp"
+            android:layout_marginTop="3dp"
+            android:textStyle="bold"
+            android:background="@drawable/tab_deselected"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="#444"
+        android:layout_below="@+id/hed"
+        android:layout_above="@+id/foot"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:dividerHeight="1dp"
+        android:id="@+id/client_order_list"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:weightSum="3"
+        android:background="@color/colorPrimaryDark"
+        android:paddingLeft="3dp"
+        android:paddingRight="3dp"
+        android:layout_below="@+id/tab"
+        android:id="@+id/hed"
+        android:orientation="horizontal"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <com.example.pc24.cbohelp.utils.UnderlineTextView
+            android:layout_width="match_parent"
+            style="@style/Header_text_left"
+            android:visibility="gone"
+            android:text="Order No."
+            android:paddingTop="7dp"
+            android:textColor="#fff"
+            android:paddingBottom="7dp"
+            android:layout_weight="1"/>
+        <View
+            android:layout_width="0.8dp"
+            android:layout_height="fill_parent"
+            android:visibility="gone"
+            android:background="#444"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            style="@style/Header_text_center"
+            android:text="Date"
+            android:visibility="gone"
+            android:textColor="#fff"
+            android:layout_weight="1"/>
+        <View
+            android:layout_width="0.8dp"
+            android:layout_height="fill_parent"
+            android:visibility="gone"
+            android:background="#444"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            style="@style/Header_text_right"
+            android:text="Amt."
+            android:visibility="gone"
+            android:textColor="#fff"
+            android:layout_weight="1"/>
+
+
+    </LinearLayout>
+
+
+</RelativeLayout>
+

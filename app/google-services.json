@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "1099394649587",
+    "firebase_url": "https://cbo-chat.firebaseio.com",
+    "project_id": "cbo-chat",
+    "storage_bucket": "cbo-chat.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1099394649587:android:58d0e0291d0317de",
+        "android_client_info": {
+          "package_name": "com.example.pc24.cbohelp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1099394649587-9709op4modt8cigtiddta1dfm4his41g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCSgMFKZCQzRLIc-TRpfZ95e9xTPyaGLAE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.pc24.cbohelp">
+
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.CALL_PHONE"></uses-permission>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/logo"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".Login"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="launch.me.action.LAUNCH_IT" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Splash"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".Company_Grid" />
+        <activity android:name=".DrRegistrationView" />
+        <activity
+            android:name=".Client_Complain_list"
+            android:configChanges="orientation|screenSize|keyboardHidden" />
+
+        <service android:name=".fcm.MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <service android:name=".fcm.MyFirebaseInstanceIDService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+
+        <activity
+            android:name=".Client_grid"
+            android:configChanges="orientation|screenSize|keyboardHidden">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="image/*" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+        </activity>
+        <activity
+            android:name=".utils.GalleryUtil"
+            android:configChanges="orientation|screenSize|keyboardHidden" />
+        <activity android:name=".AddParty.PartyDetail" />
+        <activity
+            android:name=".utils.ClientNew.ClientList"
+            android:exported="true"
+            android:configChanges="orientation|screenSize|keyboardHidden" />
+        <service
+            android:name=".utils.FloatingViewService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity android:name=".Admin_view"></activity>
+        <activity android:name=".PartyView.PartyActivity"></activity>
+        <activity android:name=".FollowUp.FollowUpActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".Followingup.NewPartyActivity"
+           />
+        <activity android:name=".FollowUp.FollowUpCommit" />
+    </application>
+
+</manifest>

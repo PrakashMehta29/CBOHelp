@@ -1,0 +1,762 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_margin="3dp"
+        android:orientation="vertical"
+        android:background="@drawable/custom_square_transparent_bg">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="5dp">
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="90dp"
+                        android:layout_height="fill_parent"
+                        android:gravity="center|left"
+                        android:text="Party"
+                        android:textColor="@android:color/black"
+                        android:textSize="17sp"
+                        android:typeface="sans" />
+
+                    <LinearLayout
+                        android:id="@+id/layout_party"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/custom_square_transparent_bg"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:id="@+id/party_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:background="#fff"
+                            android:hint="Party Name"
+                            android:scrollHorizontally="true"
+                            android:padding="5dp" />
+
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:minHeight="50dp"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="90dp"
+                        android:layout_height="fill_parent"
+                        android:gravity="center|left"
+                        android:text="Company"
+                        android:textColor="@android:color/black"
+                        android:textSize="17sp" />
+
+                    <LinearLayout
+
+                        android:id="@+id/layout_componey_type"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@drawable/custom_square_transparent_bg"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/componey_type"
+                            android:layout_width="match_parent"
+
+                            android:layout_height="40dp"
+                            android:layout_marginLeft="3dp"
+                            android:layout_weight="1"
+                            android:background="@android:color/transparent"
+                            android:padding="3dp" />
+
+                        <View
+                            android:layout_width="1.5dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginBottom="3.5dp"
+                            android:layout_marginTop="3.5dp"
+                            android:background="@color/colorPrimaryDark" />
+
+                        <ImageView
+                            android:id="@+id/spinner_img_componey"
+                            android:layout_width="match_parent"
+                            android:layout_height="35dp"
+                            android:layout_margin="1dp"
+                            android:layout_weight="4"
+                            android:padding="7.5dp"
+                            android:src="@drawable/drop_icon" />
+                    </LinearLayout>
+
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:minHeight="50dp"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="90dp"
+                        android:layout_height="fill_parent"
+                        android:gravity="center|left"
+                        android:text="Status"
+                        android:textColor="@android:color/black"
+                        android:textSize="17sp" />
+
+                    <LinearLayout
+
+                        android:id="@+id/layout_status_type"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@drawable/custom_square_transparent_bg"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <Spinner
+                            android:id="@+id/status_type"
+                            android:layout_width="match_parent"
+
+                            android:layout_height="40dp"
+                            android:layout_marginLeft="3dp"
+                            android:gravity="center"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:background="@android:color/transparent"
+                            android:padding="3dp" />
+
+                        <View
+                            android:layout_width="1.5dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginBottom="3.5dp"
+                            android:layout_marginTop="3.5dp"
+                            android:background="@color/colorPrimaryDark" />
+
+                        <ImageView
+                            android:id="@+id/spinner_img_status"
+                            android:layout_width="match_parent"
+                            android:layout_height="35dp"
+                            android:layout_margin="1dp"
+                            android:layout_weight="4"
+                            android:padding="7.5dp"
+                            android:src="@drawable/drop_icon" />
+                    </LinearLayout>
+
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="90dp"
+                        android:layout_height="match_parent"
+                        android:gravity="center|left"
+                        android:text="No of Emp."
+                        android:textColor="@android:color/black"
+                        android:textSize="17sp" />
+
+                    <LinearLayout
+                        android:id="@+id/layout_empolyee_no"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/custom_square_transparent_bg"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:id="@+id/party_empolyye_no"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:background="#fff"
+                            android:hint="No of Emp"
+                            android:maxLines="1"
+                            android:singleLine="true"
+                            android:inputType="number"
+                            android:padding="5dp" />
+
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="90dp"
+                        android:layout_height="fill_parent"
+                        android:gravity="center|left"
+                        android:text="Website"
+                        android:textColor="@android:color/black"
+                        android:textSize="17sp" />
+
+                    <LinearLayout
+                        android:id="@+id/layout_website"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/custom_square_transparent_bg"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:id="@+id/party_website"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:background="#fff"
+                            android:hint="Party Website"
+                            android:singleLine="true"
+                            android:maxLines="1"
+                            android:padding="5dp" />
+
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="90dp"
+                        android:layout_height="fill_parent"
+                        android:gravity="center|left"
+                        android:text="Person"
+                        android:textColor="@android:color/black"
+                        android:textSize="17sp" />
+
+                    <LinearLayout
+                        android:id="@+id/layout_parerson"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/custom_square_transparent_bg"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:id="@+id/party_person"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:background="#fff"
+                            android:hint="Person"
+
+                            android:singleLine="true"
+                            android:maxLines="1"
+                            android:padding="5dp" />
+
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="90dp"
+                        android:layout_height="fill_parent"
+                        android:gravity="center|left"
+                        android:text="Email"
+                        android:textColor="@android:color/black"
+                        android:textSize="17sp" />
+
+                    <LinearLayout
+                        android:id="@+id/layout_email"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/custom_square_transparent_bg"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:id="@+id/party_email"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:background="#fff"
+                            android:hint="Email"
+                            android:padding="5dp" />
+
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="90dp"
+                        android:layout_height="fill_parent"
+                        android:gravity="center|left"
+                        android:text="Mobile No"
+                        android:textColor="@android:color/black"
+                        android:textSize="17sp" />
+
+                    <LinearLayout
+                        android:id="@+id/layout_mobile"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/custom_square_transparent_bg"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:id="@+id/party_mobile_no"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:background="#fff"
+                            android:hint="Mobile No"
+                            android:maxLength="13"
+                            android:inputType="phone"
+                            android:maxLines="1"
+                            android:padding="5dp" />
+
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+
+
+
+
+
+
+
+
+
+                <LinearLayout
+
+                    android:id="@+id/logged_emp"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:minHeight="50dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="90dp"
+                        android:layout_height="fill_parent"
+                        android:gravity="center|left"
+                        android:text="User"
+                        android:textColor="@android:color/black"
+                        android:textSize="17sp" />
+
+                    <LinearLayout
+                        android:id="@+id/layout_user"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@drawable/custom_square_transparent_bg"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/party_user"
+                            android:layout_width="match_parent"
+
+                            android:layout_height="40dp"
+                            android:layout_marginLeft="3dp"
+                            android:layout_weight="1"
+                            android:background="@android:color/transparent"
+                            android:padding="3dp" />
+
+                        <View
+                            android:layout_width="1.5dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginBottom="3.5dp"
+                            android:layout_marginTop="3.5dp"
+                            android:background="@color/colorPrimaryDark" />
+
+                        <ImageView
+                            android:id="@+id/spinner_img_user"
+                            android:layout_width="match_parent"
+                            android:layout_height="35dp"
+                            android:layout_margin="1dp"
+                            android:layout_weight="4"
+                            android:padding="7.5dp"
+                            android:src="@drawable/drop_icon" />
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/user_layout1"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="50dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="90dp"
+                        android:layout_height="fill_parent"
+                        android:gravity="center|left"
+                        android:text="User 1"
+                        android:textColor="@android:color/black"
+                        android:textSize="17sp" />
+
+                    <LinearLayout
+                        android:id="@+id/layout_user1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@drawable/custom_square_transparent_bg"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/party_user1"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_marginLeft="3dp"
+                            android:layout_weight="1"
+                            android:background="@android:color/transparent"
+                            android:padding="3dp" />
+
+                        <View
+                            android:layout_width="1.5dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginBottom="3.5dp"
+                            android:layout_marginTop="3.5dp"
+                            android:background="@color/colorPrimaryDark" />
+
+                        <ImageView
+                            android:id="@+id/spinner_img_user1"
+                            android:layout_width="match_parent"
+                            android:layout_height="35dp"
+                            android:layout_margin="1dp"
+                            android:layout_weight="4"
+                            android:padding="7.5dp"
+                            android:src="@drawable/drop_icon" />
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="90dp"
+                        android:layout_height="fill_parent"
+                        android:gravity="center|left"
+                        android:text="Ref By"
+                        android:textColor="@android:color/black"
+                        android:textSize="17sp" />
+
+                    <LinearLayout
+                        android:id="@+id/layout_Ref"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/custom_square_transparent_bg"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:id="@+id/party_Ref"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:background="#fff"
+                            android:hint="Ref By"
+                            android:singleLine="true"
+
+                            android:maxLines="1"
+                            android:padding="5dp" />
+
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="90dp"
+                        android:layout_height="fill_parent"
+                        android:gravity="center|left"
+                        android:text="Lane 1"
+                        android:textColor="@android:color/black"
+                        android:textSize="17sp" />
+
+                    <LinearLayout
+                        android:id="@+id/layout_Adress_1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/custom_square_transparent_bg"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:id="@+id/party_Adrress1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:background="#fff"
+                            android:hint="Lane 1"
+                            android:singleLine="true"
+                            android:maxLines="1"
+                            android:padding="5dp" />
+
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="90dp"
+                        android:layout_height="fill_parent"
+                        android:gravity="center|left"
+                        android:text="Lane 2"
+                        android:textColor="@android:color/black"
+                        android:textSize="17sp" />
+
+                    <LinearLayout
+                        android:id="@+id/layout_Adress2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/custom_square_transparent_bg"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:id="@+id/party_Adress_2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:singleLine="true"
+                            android:background="#fff"
+                            android:hint="Lane 2"
+                            android:maxLines="1"
+                            android:padding="5dp" />
+
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="90dp"
+                        android:layout_height="fill_parent"
+                        android:gravity="center|left"
+                        android:text="City"
+                        android:textColor="@android:color/black"
+                        android:textSize="17sp" />
+
+                    <LinearLayout
+                        android:id="@+id/layout_city"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/custom_square_transparent_bg"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:id="@+id/party_city"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:background="#fff"
+                            android:maxLines="1"
+                            android:singleLine="true"
+                            android:hint="Party City"
+                            android:padding="5dp" />
+
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="90dp"
+                        android:layout_height="fill_parent"
+                        android:gravity="center|left"
+                        android:text="State"
+
+                        android:textColor="@android:color/black"
+                        android:textSize="17sp" />
+
+                    <LinearLayout
+                        android:id="@+id/layout_Adress3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/custom_square_transparent_bg"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:id="@+id/party_Adress_3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:singleLine="true"
+                            android:background="#fff"
+                            android:hint="State"
+                            android:maxLines="1"
+                            android:padding="5dp" />
+
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="90dp"
+                        android:layout_height="fill_parent"
+                        android:gravity="center|left"
+                        android:text="Pincode"
+                        android:textColor="@android:color/black"
+                        android:textSize="17sp" />
+
+                    <LinearLayout
+                        android:id="@+id/layout_Adress4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/custom_square_transparent_bg"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:id="@+id/party_Adress_4"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:singleLine="true"
+                            android:background="#fff"
+                            android:hint="Pincode"
+                            android:maxLines="1"
+                            android:padding="5dp" />
+
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="10dp"
+                  >
+                    <Button
+                        android:layout_width="fill_parent"
+                        android:layout_height="40dp"
+                        android:background="@color/colorPrimaryDark"
+                        android:id="@+id/show"
+                        android:text="Submit"
+                        android:textStyle="bold"
+                        android:textColor="#fff"
+                        android:textAllCaps="false"
+                        android:layout_gravity="bottom"
+                        android:layout_marginTop="20dp"
+                      />
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+
+
+
+
+</LinearLayout>

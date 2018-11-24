@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="3"
+        android:paddingLeft="3dp"
+        android:paddingRight="3dp"
+
+        android:orientation="horizontal">
+
+
+        <com.example.pc24.cbohelp.utils.UnderlineTextView
+            android:layout_width="match_parent"
+            style="@style/text_left"
+            android:text="name"
+            android:paddingTop="7dp"
+            android:textColor="@color/hyperLink"
+            android:paddingBottom="7dp"
+            android:textSize="7pt"
+            android:layout_gravity="center_vertical"
+            android:id="@+id/name"
+            android:layout_weight="1"/>
+        <View
+            android:layout_width="0.8dp"
+            android:layout_height="fill_parent"
+            android:background="#444"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            style="@style/text_right"
+            android:layout_gravity="center_vertical"
+            android:text="0.00"
+            android:textSize="6pt"
+            android:id="@+id/amt"
+            android:layout_weight="2"/>
+
+
+    </LinearLayout>
+
+</LinearLayout>

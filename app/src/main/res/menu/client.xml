@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/logout"
+        android:orderInCategory="100"
+        android:title="@string/action_settings"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/filter"
+        android:orderInCategory="100"
+        android:icon="@mipmap/filter"
+        android:title="filter"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/party_status"
+        android:orderInCategory="100"
+        android:icon="@drawable/followup"
+        android:title="Followup"
+        app:showAsAction="always" >
+    </item>
+
+
+
+    <item
+        android:id="@+id/change_view"
+        android:orderInCategory="100"
+        android:icon="@drawable/change_view"
+        android:title="filter"
+        app:showAsAction="always" >
+        <menu>
+            <item android:id="@+id/user_view" android:title="User View"></item>
+            <item android:id="@+id/party_view" android:title="Party View"></item>
+            <item android:id="@+id/general_view" android:title="General View"></item>
+        </menu>
+    </item>
+
+    <!--<item android:id="@+id/spinner"
+        android:title="will be replaced anyway"
+        app:showAsAction="ifRoom"
+        app:actionViewClass="android.widget.Spinner"
+        android:layout_gravity="left"
+        android:gravity="left"/>-->
+    <item
+        android:id="@+id/menu_search"
+        android:title="search"
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        app:showAsAction="always"/>
+</menu>
