@@ -22,8 +22,7 @@ public class CustomDatePicker implements DatePickerDialog.OnDateSetListener{
     private Context context;
     dlvc
     dfkfd
-            mklfnkflk
-    flkfl
+    
 
     public static Date getDate(String date,String format) throws java.text.ParseException {
         SimpleDateFormat format_new = new SimpleDateFormat(format);
