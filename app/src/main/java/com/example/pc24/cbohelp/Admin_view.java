@@ -22,7 +22,7 @@ import android.widget.Toast;
 import com.example.pc24.cbohelp.adaptor.Client_order_Adaptor;
 import com.example.pc24.cbohelp.appPreferences.Shareclass;
 import com.example.pc24.cbohelp.dbHelper.DBHelper;
-import com.example.pc24.cbohelp.services.CboServices;
+import com.example.pc24.cbohelp.services.CboServices_Old;
 import com.example.pc24.cbohelp.utils.SendMailTask;
 
 import org.json.JSONArray;
@@ -173,7 +173,7 @@ public class Admin_view extends AppCompatActivity implements SearchView.OnQueryT
             if (adaptor_data.size() == 0)
                 progress1.show();
 
-            new CboServices(this, mHandler).customMethodForAllServices(request, "PARTYGRID", MESSAGE_INTERNET, tables);
+            new CboServices_Old(this, mHandler).customMethodForAllServices(request, "PARTYGRID", MESSAGE_INTERNET, tables);
 
             //End of call to service
         }
@@ -281,7 +281,7 @@ public class Admin_view extends AppCompatActivity implements SearchView.OnQueryT
                 progress1.dismiss();
             } catch (JSONException e) {
                 Log.d("MYAPP", "objects are: " + e.toString());
-                CboServices.getAlert(this,"Missing field error",e.toString());
+                CboServices_Old.getAlert(this,"Missing field error",e.toString());
                 List toEmailList = Arrays.asList("support@cboinfotech.com".split("\\s*,\\s*"));
                 new SendMailTask(this).execute("support@cboinfotech.com",
                         "Cbo12345",toEmailList , "Missing field error", e.toString());

@@ -2,10 +2,8 @@ package com.example.pc24.cbohelp.AddParty;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.Intent;
+import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.Patterns;
@@ -19,14 +17,17 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
-import com.example.pc24.cbohelp.PartyView.PartyActivity;
+
 import com.example.pc24.cbohelp.PartyView.mParty;
 import com.example.pc24.cbohelp.R;
 import com.example.pc24.cbohelp.Spinner_Dialog;
 import com.example.pc24.cbohelp.appPreferences.Shareclass;
 import com.example.pc24.cbohelp.dbHelper.DBHelper;
-import com.example.pc24.cbohelp.services.CboServices;
+import com.example.pc24.cbohelp.services.CboServices_Old;
 import com.example.pc24.cbohelp.utils.DropDownModel;
+import com.example.pc24.cbohelp.utils.MyAPIService;
+import com.uenics.javed.CBOLibrary.CBOServices;
+import com.uenics.javed.CBOLibrary.ResponseBuilder;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,14 +36,13 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static android.location.Location.convert;
-
 
 public class PartyDetail extends AppCompatActivity {
 
     String[] STATUS = { "Done", "InProcess", "Not Intrested"};
     Button ComponeyType, User, User1;
     Spinner Status;
+    Context context;
     public ProgressDialog progress1;
     private static final int MESSAGE_INTERNET = 1, FollowUpOrder_Commit = 2, ClientPopulate = 3;
     Shareclass shareclass;
@@ -119,6 +119,7 @@ public class PartyDetail extends AppCompatActivity {
         progress1 = new ProgressDialog(this);
         shareclass = new Shareclass();
         dbHelper = new DBHelper(this);
+        context=this;
 
         ArrayAdapter aa = new ArrayAdapter(PartyDetail.this, android.R.layout.simple_spinner_item, STATUS);
         aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -271,11 +272,38 @@ public class PartyDetail extends AppCompatActivity {
         tables.add(0);
         tables.add(1);
 
-        progress1.setMessage("Please Wait..\n" +
-                " Fetching data");
-        progress1.setCancelable(false);
-        progress1.show();
-        new CboServices(this, mHandler).customMethodForAllServices(request, "FollowupOrder_ddl", MESSAGE_INTERNET, tables);
+
+        new MyAPIService(context)
+                .execute(new ResponseBuilder("FollowupOrder_ddl",request)
+                        .setTables(tables)
+                        .setResponse(new CBOServices.APIResponse() {
+                            @Override
+                            public void onComplete(Bundle message) {
+                                componeydataCopy.addAll(componeydata);
+                                UserDataCopy.addAll(UserData);
+                                ComponeyType.setText(ComponeyName);
+                                UserData1.addAll(UserData);
+                                User.setText(userName);
+                                User.setPadding(1, 0, 5, 0);
+                                User1.setText(userName);
+                                User1.setPadding(1, 0, 5, 0);
+                                Clientpoulate();
+                            }
+
+                            @Override
+                            public void onResponse(Bundle response) {
+                                parser1(response);
+
+                            }
+
+
+                        })
+                );
+
+
+
+
+     /*   new CboServices_Old(this, mHandler).customMethodForAllServices(request, "FollowupOrder_ddl", MESSAGE_INTERNET, tables);*/
 
 
     }
@@ -293,12 +321,70 @@ public class PartyDetail extends AppCompatActivity {
             ArrayList<Integer> tables = new ArrayList<>();
             tables.add(0);
 
-            progress1.setMessage("Please Wait..\n" +
-                    " Fetching data");
-            progress1.setCancelable(false);
-            progress1.show();
-            new CboServices(this, mHandler).customMethodForAllServices(request, "ClientPopulate", ClientPopulate, tables);
 
+
+
+
+
+            new MyAPIService(context)
+                    .execute(new ResponseBuilder("ClientPopulate",request)
+                            .setTables(tables)
+
+                            .setResponse(new CBOServices.APIResponse() {
+                                @Override
+                                public void onComplete(Bundle message) {
+                                    SetSpinnerItem();
+
+                                    if (mPartyFields != null) {
+
+
+                                        paname.setText(mPartyFields.get(0).getPANAME());
+                                        mobile.setText(mPartyFields.get(0).getMOBILE());
+                                        EmplyeeNo.setText(mPartyFields.get(0).getNOOFEMPLOYEE());
+                                        city.setText(mPartyFields.get(0).getCITY());
+                                        mobile.setText(mPartyFields.get(0).getMOBILE());
+                                        ComponeyType.setText(mPartyFields.get(0).getCOMPANYTYPE());
+                                        email.setText(mPartyFields.get(0).getEMAIL());
+                                        person.setText(mPartyFields.get(0).getPERSON());
+                                        Referby.setText(mPartyFields.get(0).getREFBY());
+                                        website.setText(mPartyFields.get(0).getWEBSITE());
+                                        adress1.setText(mPartyFields.get(0).getADD1());
+                                        adress2.setText(mPartyFields.get(0).getADD2());
+                                        adress3.setText(mPartyFields.get(0).getADD3());
+                                        adress4.setText(mPartyFields.get(0).getADD4());
+
+                                        if (mPartyFields.get(0).getPARTYSTATUS() != "") {
+                                            if (mPartyFields.get(0).equals("InProcess")) {
+
+                                                Status.setSelection(1);
+                                            } else if (mPartyFields.get(0).getPARTYSTATUS().equals("Done")) {
+                                                Status.setSelection(0);
+                                            } else if (mPartyFields.get(0).getPARTYSTATUS().equals("Not Intrested")) {
+
+                                                Status.setSelection(2);
+                                            } else {
+                                                Status.setSelection(1);
+                                            }
+
+
+                                        }
+
+
+                                    }
+                                }
+
+                                @Override
+                                public void onResponse(Bundle response) {
+                                    parser3(response);
+
+                                }
+
+
+                            })
+                    );
+
+         /*   new CboServices_Old(this, mHandler).customMethodForAllServices(request, "ClientPopulate", ClientPopulate, tables);
+*/
 
         }
     }
@@ -325,20 +411,44 @@ public class PartyDetail extends AppCompatActivity {
         request.put("sAdd2", adress2.getText().toString());
         request.put("sAdd3", adress3.getText().toString());
         request.put("sAdd4", adress4.getText().toString());
-        ArrayList<Integer> tables = new ArrayList<>();
+        /*ArrayList<Integer> tables = new ArrayList<>();
         tables.add(0);
+*/
 
 
-        progress1.setMessage("Please Wait..\n" +
-                " Fetching data");
-        progress1.setCancelable(false);
-        progress1.show();
-        new CboServices(getApplicationContext(), mHandler).customMethodForAllServices(request, "FollowUpOrder_Commit", FollowUpOrder_Commit, tables);
+        new MyAPIService(context)
+
+                .execute(new ResponseBuilder("FollowUpOrder_Commit",request)
+                      /*  .setTables(tables)
+                        .setMultiTable(false)*/
+                        .setResponse(new CBOServices.APIResponse() {
+                            @Override
+                            public void onComplete(Bundle message) {
+
+                            }
+
+                            @Override
+                            public void onResponse(Bundle response) {
+                                parser2(response);
+
+                            }
+
+
+                        })
+                );
+
+
+
+
+
+
+//        new CboServices_Old(getApplicationContext(), mHandler).customMethodForAllServices(request, "FollowUpOrder_Commit", FollowUpOrder_Commit, tables);
         Toast.makeText(PartyDetail.this, "Data Submitted", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(PartyDetail.this, PartyActivity.class);
-//        intent.putExtra("iUser_ID", String.valueOf(User.getSelectedItemId()));
-//        intent.putExtras(intent);
-        startActivity(intent);
+//        Intent intent = new Intent(PartyDetail.this, PartyActivity.class);
+////        intent.putExtra("iUser_ID", String.valueOf(User.getSelectedItemId()));
+////        intent.putExtras(intent);
+//        startActivity(intent);
+        finish();
     }
 /*
 
@@ -359,7 +469,7 @@ public class PartyDetail extends AppCompatActivity {
                     " Fetching data");
             progress1.setCancelable(false);
             progress1.show();
-            new CboServices(this,mHandler).customMethodForAllServices(request,"ClientPopulate",ClientPopulate,tables);
+            new CboServices_Old(this,mHandler).customMethodForAllServices(request,"ClientPopulate",ClientPopulate,tables);
 
 
         }
@@ -379,8 +489,18 @@ public class PartyDetail extends AppCompatActivity {
         }
     }
 
+    private boolean isValidMobile(String phone) {
+
+
+
+        return android.util.Patterns.PHONE.matcher(phone).matches();
+    }
 
     public boolean Validatemobileno() {
+
+
+
+
         String usermobile = mobile.getText().toString().trim();
 
         if (usermobile.isEmpty()) {
@@ -389,7 +509,14 @@ public class PartyDetail extends AppCompatActivity {
         } else if (!Patterns.PHONE.matcher(usermobile).matches()) {
             mobile.setError("Please enter valid  mobileno");
             return false;
-        } else {
+        }
+        else if(usermobile.length()!=10){
+
+            mobile.setError("Please enter valid  mobileno");
+            return false;
+
+        }
+        else {
             mobile.setError(null);
             return true;
         }
@@ -518,56 +645,9 @@ public class PartyDetail extends AppCompatActivity {
         }
     }
 
-    private final Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case MESSAGE_INTERNET:
-                    progress1.dismiss();
-                    if ((null != msg.getData())) {
-
-                        parser1(msg.getData());
-                        Clientpoulate();
-
-                    }
-                    break;
-
-                case FollowUpOrder_Commit:
-                    progress1.dismiss();
-                    if ((null != msg.getData())) {
-                        parser2(msg.getData());
-
-                        //  parser1(msg.getData());
-
-                    }
-                    break;
-
-                case ClientPopulate:
-
-                    if ((null != msg.getData())) {
-                        parser3(msg.getData());
-                        SetSpinnerItem();
-                        //  parser1(msg.getData());
-
-                    }
-                    break;
-                case 99:
-                    progress1.dismiss();
-                    if ((null != msg.getData())) {
-
-                        Toast.makeText(getApplicationContext(), msg.getData().getString("Error"), Toast.LENGTH_SHORT).show();
-
-                    }
-                    break;
-                default:
-                    progress1.dismiss();
-
-            }
-        }
-    };
 
     public void parser1(Bundle result) {
-        if (result != null) {
+
             //dbHelper.deleteMenu();
             try {
                 String table0 = result.getString("Tables0");
@@ -577,15 +657,14 @@ public class PartyDetail extends AppCompatActivity {
                     componeydata.add(new DropDownModel(c.getString("PA_NAME"), "0"));
                 }
 
-                componeydataCopy.addAll(componeydata);
+               // componeydataCopy.addAll(componeydata);
 
                 if (componeydata.size() != 1) {
 
 
                     ComponeyId = componeydata.get(0).getId();
                     ComponeyName = componeydata.get(0).getName();
-                    ComponeyType.setText(ComponeyName);
-                    ComponeyType.setPadding(1, 0, 5, 0);
+
 
 
                 }
@@ -597,32 +676,30 @@ public class PartyDetail extends AppCompatActivity {
                     JSONObject c = jsonArray2.getJSONObject(i);
                     UserData.add(new DropDownModel(c.getString("USER_NAME"), c.getString("ID")));
                 }
-                UserDataCopy.addAll(UserData);
-                UserData1.addAll(UserData);
+               // UserDataCopy.addAll(UserData);
+               // UserData1.addAll(UserData);
                 if (UserData.size() != 1) {
                     userId = UserData.get(1).getId();
                     userName = UserData.get(1).getName();
-                    User.setText(userName);
-                    User.setPadding(1, 0, 5, 0);
-                    User1.setText(userName);
+
                     userId1 = UserData.get(1).getId();
-                    User1.setPadding(1, 0, 5, 0);
+
 
                  }
 
 
-                progress1.dismiss();
+
 
             } catch (JSONException e) {
                 Log.d("MYAPP", "objects are: " + e.toString());
-                CboServices.getAlert(this, "Missing field error", getResources().getString(R.string.service_unavilable) + e.toString());
+                CboServices_Old.getAlert(this, "Missing field error", getResources().getString(R.string.service_unavilable) + e.toString());
                 e.printStackTrace();
             }
-            progress1.dismiss();
+
         }
 
-        progress1.dismiss();
-    }
+
+
 
     private void parser2(Bundle result) {
         if (result != null) {
@@ -635,10 +712,6 @@ public class PartyDetail extends AppCompatActivity {
 
     private void parser3(Bundle result1) {
         {
-            if ((result1 == null)) {
-                progress1.dismiss();
-
-            } else {
 
 
                 try {
@@ -670,7 +743,7 @@ public class PartyDetail extends AppCompatActivity {
                         String Person = c.getString("PERSON");
                         mFields.setPERSON(Person);
                         String referby = c.getString("REF_BY");
-                        mFields.setPERSON(referby);
+                        mFields.setREFBY(referby);
 
                         String PStatus = c.getString("PARTY_STATUS");
                         mFields.setPARTYSTATUS(PStatus);
@@ -689,58 +762,57 @@ public class PartyDetail extends AppCompatActivity {
                         mFields.setADD3(add3);
                         String add4 = c.getString("ADD4");
                         mFields.setADD4(add4);
-
-
-                        mPartyFields.add(mFields);
-                        paname.setText(name);
-                        EmplyeeNo.setText(NoofEmp);
-                        city.setText(City);
-                        mobile.setText(contact);
-                        ComponeyType.setText(companytype);
-                        if(mFields.getPARTYSTATUS()!=""){
-                           if(mFields.getPARTYSTATUS().equals("InProcess")){
-
-                               Status.setSelection(1);
-                           }
-                             else if(mFields.getPARTYSTATUS().equals("Done")){
-
-                                Status.setSelection(0);
-                            }
-                            else if (mFields.getPARTYSTATUS().equals("Not Intrested")){
-
-                                Status.setSelection(2);
-                            }
-                           else{
-                               Status.setSelection(1);
-                           }
-
-                          //  Status.setSelection(Integer.parseInt(mFields.getPARTYSTATUS()));
-                        }
-
-                        //User.setText(UserData.get(Integer.parseInt(userId)).getName());
-                        // User1.setText(UserData.get(Integer.parseInt(user1Id)).getName());
-                        email.setText(Email);
-                        person.setText(Person);
-                        Referby.setText(referby);
-                        EmplyeeNo.setText(NoofEmp);
-                        website.setText(websit);
-                        adress1.setText(add1);
-                        adress2.setText(add2);
-                        adress3.setText(add3);
-                        adress4.setText(add4);
+                       mPartyFields.add(mFields);
+//
+//                        mPartyFields.add(mFields);
+//                        paname.setText(name);
+//                        EmplyeeNo.setText(NoofEmp);
+//                        city.setText(City);
+//                        mobile.setText(contact);
+//                        ComponeyType.setText(companytype);
+//                        if(mFields.getPARTYSTATUS()!=""){
+//                           if(mFields.getPARTYSTATUS().equals("InProcess")){
+//
+//                               Status.setSelection(1);
+//                           }
+//                             else if(mFields.getPARTYSTATUS().equals("Done")){
+//
+//                                Status.setSelection(0);
+//                            }
+//                            else if (mFields.getPARTYSTATUS().equals("Not Intrested")){
+//
+//                                Status.setSelection(2);
+//                            }
+//                           else{
+//                               Status.setSelection(1);
+//                           }
+//
+//                          //  Status.setSelection(Integer.parseInt(mFields.getPARTYSTATUS()));
+//                        }
+//
+//                        //User.setText(UserData.get(Integer.parseInt(userId)).getName());
+//                        // User1.setText(UserData.get(Integer.parseInt(user1Id)).getName());
+//                        email.setText(Email);
+//                        person.setText(Person);
+//                        Referby.setText(referby);
+//                        EmplyeeNo.setText(NoofEmp);
+//                        website.setText(websit);
+//                        adress1.setText(add1);
+//                        adress2.setText(add2);
+//                        adress3.setText(add3);
+//                        adress4.setText(add4);
                     }
 
-                    progress1.dismiss();
+
 
 
                 } catch (Exception e) {
-                    progress1.dismiss();
+
                     e.printStackTrace();
                 }
             }
         }
 
-    }
 
 
     @Override

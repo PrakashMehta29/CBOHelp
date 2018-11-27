@@ -4,41 +4,26 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.arch.lifecycle.ViewModel;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.design.widget.AppBarLayout;
-import android.support.v4.view.ViewCompat;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.pc24.cbohelp.PartyView.PartyActivity;
-import com.example.pc24.cbohelp.PartyView.Partyviewapdater;
-import com.example.pc24.cbohelp.PartyView.SwipeController;
 import com.example.pc24.cbohelp.PartyView.mParty;
 import com.example.pc24.cbohelp.appPreferences.Shareclass;
 import com.example.pc24.cbohelp.dbHelper.DBHelper;
-import com.example.pc24.cbohelp.services.CboServices;
+import com.example.pc24.cbohelp.services.CboServices_Old;
 import com.example.pc24.cbohelp.utils.Custom_Variables_And_Method;
 import com.example.pc24.cbohelp.utils.SendMailTask;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import static android.content.Intent.getIntent;
-import static android.content.Intent.normalizeMimeType;
 
 public class VM_Followup extends ViewModel  {
   Context context;
@@ -104,7 +89,6 @@ public class VM_Followup extends ViewModel  {
     public VM_Followup() {
 
         super();
-
         custom_variables_and_method = Custom_Variables_And_Method.getInstance();
         dbHelper = new DBHelper(context);
 
@@ -156,7 +140,7 @@ public class VM_Followup extends ViewModel  {
 
        progress1.setMessage("Please Wait..\n" +" Fetching data");
        progress1.show();
-        new CboServices(context, mHandler).customMethodForAllServices(request, "FollowUpGrid", FOLLOWUPGRID, tables);
+        new CboServices_Old(context, mHandler).customMethodForAllServices(request, "FollowUpGrid", FOLLOWUPGRID, tables);
 
 
 
@@ -260,7 +244,7 @@ public class VM_Followup extends ViewModel  {
                 } catch (Exception e) {
                     resulyListner.ErrorResult("Missing field error", e.toString());
                     Log.d("MYAPP", "objects are: " + e.toString());
-                    CboServices.getAlert(context,"Missing field error",e.toString());
+                    CboServices_Old.getAlert(context,"Missing field error",e.toString());
                     List toEmailList = Arrays.asList("support@cboinfotech.com".split("\\s*,\\s*"));
                     new SendMailTask(context).execute("support@cboinfotech.com",
                             "Cbo12345",toEmailList , "Missing field error", e.toString());

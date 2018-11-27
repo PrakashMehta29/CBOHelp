@@ -5,8 +5,6 @@ import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,7 +20,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,7 +27,7 @@ import android.widget.Toast;
 import com.example.pc24.cbohelp.adaptor.Client_order_Adaptor;
 import com.example.pc24.cbohelp.appPreferences.Shareclass;
 import com.example.pc24.cbohelp.dbHelper.DBHelper;
-import com.example.pc24.cbohelp.services.CboServices;
+import com.example.pc24.cbohelp.services.CboServices_Old;
 import com.example.pc24.cbohelp.utils.SendMailTask;
 
 import org.json.JSONArray;
@@ -184,7 +181,7 @@ public class Client_grid extends AppCompatActivity implements SearchView.OnQuery
             if (adaptor_data.size() == 0)
                 progress1.show();
 
-            new CboServices(this, mHandler).customMethodForAllServices(request, "PARTYGRID", MESSAGE_INTERNET, tables);
+            new CboServices_Old(this, mHandler).customMethodForAllServices(request, "PARTYGRID", MESSAGE_INTERNET, tables);
 
             //End of call to service
         }
@@ -292,7 +289,7 @@ public class Client_grid extends AppCompatActivity implements SearchView.OnQuery
                 progress1.dismiss();
             } catch (JSONException e) {
                 Log.d("MYAPP", "objects are: " + e.toString());
-                CboServices.getAlert(this,"Missing field error",e.toString());
+                CboServices_Old.getAlert(this,"Missing field error",e.toString());
                 List toEmailList = Arrays.asList("support@cboinfotech.com".split("\\s*,\\s*"));
                 new SendMailTask(this).execute("support@cboinfotech.com",
                         "Cbo12345",toEmailList , "Missing field error", e.toString());

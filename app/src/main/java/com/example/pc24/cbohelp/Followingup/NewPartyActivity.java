@@ -18,7 +18,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -29,12 +28,11 @@ import android.widget.Toast;
 import com.example.pc24.cbohelp.PartyView.PartyActivity;
 import com.example.pc24.cbohelp.PartyView.mParty;
 import com.example.pc24.cbohelp.R;
-import com.example.pc24.cbohelp.SpinAdapter;
-import com.example.pc24.cbohelp.SpinnerModel;
 import com.example.pc24.cbohelp.appPreferences.Shareclass;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class NewPartyActivity extends AppCompatActivity implements SearchView.OnQueryTextListener, IFollowingup {
 
@@ -49,12 +47,13 @@ public class NewPartyActivity extends AppCompatActivity implements SearchView.On
     ImageView img_followdate, img_nextfollowdate, Img_party;
     RadioGroup radioGroup;
     RadioButton entrydate, followingdate;
-    Button followdatebtn, nextfollowdatebtn, Gobtn;
+    Button fromdatebtn, todatebtn, Gobtn;
     LinearLayout  Lmissedtype;
     TextView PartyTxt;
     Shareclass shareclass;
     DatePickerDialog.OnDateSetListener from_dateListener, to_dateListener;
     private Menu menu;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,8 +62,8 @@ public class NewPartyActivity extends AppCompatActivity implements SearchView.On
         setContentView(R.layout.actvity_party_layout);
         followupdate = (TextView) findViewById(R.id.followdate);
         nextfollowupdate = (TextView) findViewById(R.id.nextfollowdate);
-        followdatebtn = (Button) findViewById(R.id.followdatebtn);
-        nextfollowdatebtn = (Button) findViewById(R.id.nextfollowdatebtn);
+        fromdatebtn = (Button) findViewById(R.id.fromdatebtn);
+        todatebtn = (Button) findViewById(R.id.todatebtn);
         img_followdate = (ImageView) findViewById(R.id.spinner_img_followdate);
         img_nextfollowdate = (ImageView) findViewById(R.id.spinner_img_nextfollowdate);
         PartyTxt = (TextView) findViewById(R.id.party_name);
@@ -88,10 +87,10 @@ public class NewPartyActivity extends AppCompatActivity implements SearchView.On
 
         }
 
-        followdatebtn.setText(CustomDatePicker.currentDate());
-        vm_following.setEnteryDate(followdatebtn.getText().toString());
-        nextfollowdatebtn.setText(CustomDatePicker.currentDate());
-        vm_following.setFollowingDate(nextfollowdatebtn.getText().toString());
+        fromdatebtn.setText(CustomDatePicker.currentDate( CustomDatePicker.ShowFormat));
+        vm_following.setFromDate(CustomDatePicker.currentDate( CustomDatePicker.CommitFormat));
+        todatebtn.setText(CustomDatePicker.currentDate( CustomDatePicker.ShowFormat));
+        vm_following.setToDate(CustomDatePicker.currentDate( CustomDatePicker.CommitFormat));
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
@@ -108,9 +107,12 @@ public class NewPartyActivity extends AppCompatActivity implements SearchView.On
         });
 
 
+
         Gobtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+
                 if (!PartyTxt.getText().toString().equals("")) {
                     GetclientDetail(context);
                 } else {
@@ -118,18 +120,18 @@ public class NewPartyActivity extends AppCompatActivity implements SearchView.On
                 }
             }
         });
-        followdatebtn.setOnClickListener(new View.OnClickListener() {
+        fromdatebtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {
                     new CustomDatePicker(context, null,
-                            CustomDatePicker.getDate(nextfollowdatebtn.getText().toString(), "MM/dd/yyyy")
-                    ).Show(CustomDatePicker.getDate(followdatebtn.getText().toString(), "MM/dd/yyyy")
+                            CustomDatePicker.getDate(todatebtn.getText().toString(), CustomDatePicker.ShowFormat)
+                    ).Show(CustomDatePicker.getDate(fromdatebtn.getText().toString(),  CustomDatePicker.ShowFormat)
                             , new CustomDatePicker.ICustomDatePicker() {
                                 @Override
-                                public void onDateSet(int year, int month, int dayOfMonth) {
-                                    followdatebtn.setText(month + "/" + dayOfMonth + "/" + year);
-                                    vm_following.setEnteryDate(month + "/" + dayOfMonth + "/" + year);
+                                public void onDateSet(Date date) {
+                                    fromdatebtn.setText(CustomDatePicker.formatDate(date,CustomDatePicker.ShowFormat));
+                                    vm_following.setFromDate(CustomDatePicker.formatDate(date,CustomDatePicker.CommitFormat));
                                 }
                             });
 
@@ -140,18 +142,18 @@ public class NewPartyActivity extends AppCompatActivity implements SearchView.On
             }
         });
 
-        nextfollowdatebtn.setOnClickListener(new View.OnClickListener() {
+        todatebtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {
                     new CustomDatePicker(context,
-                            CustomDatePicker.getDate(followdatebtn.getText().toString(), "MM/dd/yyyy"))
-                            .Show(CustomDatePicker.getDate(nextfollowdatebtn.getText().toString(), "MM/dd/yyyy")
+                            CustomDatePicker.getDate(fromdatebtn.getText().toString(),  CustomDatePicker.ShowFormat))
+                            .Show(CustomDatePicker.getDate(todatebtn.getText().toString(),  CustomDatePicker.ShowFormat)
                                     , new CustomDatePicker.ICustomDatePicker() {
                                         @Override
-                                        public void onDateSet(int year, int month, int dayOfMonth) {
-                                            nextfollowdatebtn.setText(month + "/" + dayOfMonth + "/" + year);
-                                            vm_following.setFollowingDate(month + "/" + dayOfMonth + "/" + year);
+                                        public void onDateSet(Date date) {
+                                            todatebtn.setText(CustomDatePicker.formatDate(date,CustomDatePicker.ShowFormat));
+                                            vm_following.setToDate(CustomDatePicker.formatDate(date,CustomDatePicker.CommitFormat));
                                         }
                                     });
                 } catch (ParseException e) {
@@ -162,14 +164,14 @@ public class NewPartyActivity extends AppCompatActivity implements SearchView.On
         img_followdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                followdatebtn.performClick();
+                fromdatebtn.performClick();
 
             }
         });
         img_nextfollowdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                nextfollowdatebtn.performClick();
+                todatebtn.performClick();
             }
         });
 
@@ -183,19 +185,25 @@ public class NewPartyActivity extends AppCompatActivity implements SearchView.On
                 startActivityForResult(intent1, 0);
             }
         });
-        if (radioGroup.getCheckedRadioButtonId() == -1) {
 
-        } else {
-            int selectedId = radioGroup.getCheckedRadioButtonId();
-            if (selectedId == R.id.entrydate) {
-                vm_following.setViewby("F");
-            } else {
-                vm_following.setViewby("N");
+        vm_following.setViewby("F");
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                int selectedId = radioGroup.getCheckedRadioButtonId();
+                if (selectedId == R.id.entrydate) {
+                    vm_following.setViewby("F");
+                } else {
+                    vm_following.setViewby("N");
+                }
             }
-        }
+        });
+
         if (PartyTxt.getText().toString().equals("")) {
             hideOption(R.id.add_remark);
         }
+
+        Lmissedtype.performClick();
     }
 
 
@@ -226,7 +234,7 @@ public class NewPartyActivity extends AppCompatActivity implements SearchView.On
                 ViewCompat.setNestedScrollingEnabled(
                         recyclerView, false);
                 //   appBarLayout.setExpanded(false);
-                appBarLayout.setExpanded(true, true);
+                //appBarLayout.setExpanded(true, true);
             }
 
             @Override
@@ -254,6 +262,8 @@ public class NewPartyActivity extends AppCompatActivity implements SearchView.On
         item.setVisible(false);
     }
 
+
+
     private void showOption(int id) {
         if (menu == null) return;
         MenuItem item = menu.findItem(id);
@@ -267,13 +277,19 @@ public class NewPartyActivity extends AppCompatActivity implements SearchView.On
 
 
         if (id == R.id.add_remark) {
-            if (!PartyTxt.getText().toString().equals("")) {
-
-                vm_following.NextFollowupDialog(context);
-            } else {
-                Toast.makeText(context, "Please Select Party Name First", Toast.LENGTH_SHORT).show();
+            if (PartyTxt.getText().toString()!="") {
+              vm_following.NextFollowupDialog(context);
             }
-        } else {
+            else{
+                Toast.makeText(context, "Please Select Party Name", Toast.LENGTH_SHORT).show();
+
+            }
+        }
+        else if(id==R.id.menu_search){
+
+            Lmissedtype.performClick();
+        }
+        else {
             finish();
         }
 
@@ -325,4 +341,16 @@ public class NewPartyActivity extends AppCompatActivity implements SearchView.On
 
     }
 
+
+    public boolean Validatepaname() {
+        String username = PartyTxt.getText().toString().trim();
+
+        if (username.isEmpty()) {
+            PartyTxt.setError("Please enter your name");
+            return false;
+        } else {
+            PartyTxt.setError(null);
+            return true;
+        }
+    }
 }

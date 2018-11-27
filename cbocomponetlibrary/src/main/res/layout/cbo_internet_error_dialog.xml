@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:background="@drawable/view_square"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+      >
+        <ImageView
+            android:id="@+id/imgnotcontacted"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:src="@drawable/cloud"
+            android:layout_marginLeft="100dp"/>
+        <!-- <ImageView
+             android:id="@+id/imgnotcontacted_two"
+             android:layout_width="wrap_content"
+             android:layout_height=""
+             android:src="@drawable/screen_bad"
+             android:layout_below="@+id/imgnotcontacted"
+             android:layout_marginLeft="150dp"/>-->
+        <TextView
+            android:id="@+id/error_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Whoops!"
+            android:textSize="28dp"
+            android:layout_marginTop="15dp"
+            android:layout_centerInParent="true"/>
+        <TextView
+            android:id="@+id/sub_error_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/error_text"
+            android:layout_marginTop="130dp"
+
+            android:text="@string/error_msg"
+          android:layout_marginLeft="15dp"
+            android:textSize="16dp"
+            android:singleLine="false"
+            android:paddingTop="5dp"
+            />
+        <TextView
+            android:id="@+id/sub_error_text2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/sub_error_text"
+            android:layout_centerInParent="true"
+            android:textSize="16dp"
+            android:text="@string/connection"
+            android:singleLine="false"
+            />
+
+        <Button
+            android:id="@+id/btn_tryagain"
+            android:layout_width="170dp"
+            android:layout_height="40dp"
+            android:text="Try again"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:layout_below="@+id/sub_error_text"
+            android:textSize="15dp"
+            android:textStyle="bold"
+            android:layout_marginLeft="80dp"
+            android:layout_marginTop="50dp"
+
+            android:background="@drawable/button_background"/>
+
+
+
+
+
+
+
+    </RelativeLayout>
+</RelativeLayout>

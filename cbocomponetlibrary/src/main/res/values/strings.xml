@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">checkinginternet</string>
+    <string name="connection">your connection</string>
+    <string name="error_msg">Sorry We can\'t Connect internet Kindly check </string>
+    <string name="Internet_error">Connection timeout. Please try after some time or Switch ON/OFF your Internet \n</string>
+    <string name="try_later">Please try after sometime.</string>
+
+    <string name="uploads_disabled">File uploads are disabled.</string>
+    <string name="choose_upload">Choose file for upload</string>
+    <string name="choose_photo_title">Select Photo</string>
+    <string name="service_unavilable">We are facing some technical issues. We will have it resolved shortly so please try again after some time. If possible, do send a screenshot to support@cboinfotech.com. \n</string>
+
+</resources>

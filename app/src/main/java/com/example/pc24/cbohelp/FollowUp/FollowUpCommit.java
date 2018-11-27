@@ -1,44 +1,27 @@
 package com.example.pc24.cbohelp.FollowUp;
 
 import android.app.ProgressDialog;
-import android.app.SearchManager;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.pc24.cbohelp.PartyView.SwipeController;
 import com.example.pc24.cbohelp.R;
 import com.example.pc24.cbohelp.appPreferences.Shareclass;
 import com.example.pc24.cbohelp.dbHelper.DBHelper;
-import com.example.pc24.cbohelp.services.CboServices;
+import com.example.pc24.cbohelp.services.CboServices_Old;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 public  class FollowUpCommit  extends AppCompatActivity {
     private static final int FOLLOWUPGRID = 1;
@@ -118,7 +101,7 @@ public  class FollowUpCommit  extends AppCompatActivity {
                 " Fetching data");
         progress1.setCancelable(false);
         progress1.show();
-        new CboServices(this, mHandler).customMethodForAllServices(request, "FollowCommit", FOLLOWUPGRID, tables);
+        new CboServices_Old(this, mHandler).customMethodForAllServices(request, "FollowCommit", FOLLOWUPGRID, tables);
 
 
     }

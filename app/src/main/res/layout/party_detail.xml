@@ -360,7 +360,7 @@
                             android:background="#fff"
                             android:hint="Mobile No"
                             android:maxLength="13"
-                            android:inputType="phone"
+                            android:inputType="number"
                             android:maxLines="1"
                             android:padding="5dp" />
 
@@ -719,7 +719,7 @@
                             android:layout_gravity="center"
                             android:layout_weight="1"
                             android:singleLine="true"
-                            android:background="#fff"
+                            android:inputType="number" android:background="#fff"
                             android:hint="Pincode"
                             android:maxLines="1"
                             android:padding="5dp" />

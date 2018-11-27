@@ -5,31 +5,24 @@ import android.app.ProgressDialog;
 import android.arch.lifecycle.ViewModel;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.util.Log;
 
 
 import com.example.pc24.cbohelp.FollowUp.FollowupDialog;
-import com.example.pc24.cbohelp.FollowUp.VM_Followup;
 
 
-import com.example.pc24.cbohelp.PartyView.PartyActivity;
 import com.example.pc24.cbohelp.PartyView.mParty;
-import com.example.pc24.cbohelp.SpinnerModel;
 import com.example.pc24.cbohelp.appPreferences.Shareclass;
 import com.example.pc24.cbohelp.dbHelper.DBHelper;
-import com.example.pc24.cbohelp.services.CboServices;
 import com.example.pc24.cbohelp.utils.Custom_Variables_And_Method;
-import com.example.pc24.cbohelp.utils.SendMailTask;
+import com.example.pc24.cbohelp.utils.MyAPIService;
+import com.uenics.javed.CBOLibrary.CBOServices;
+import com.uenics.javed.CBOLibrary.ResponseBuilder;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 
 public class Vm_Following extends ViewModel {
     Context context;
@@ -51,32 +44,32 @@ public class Vm_Following extends ViewModel {
     IFollowingup iFollowingup=null;
     Integer NEXTFOLLOWUP=0;
 
-    public String getEnteryDate() {
-        return EnteryDate;
+    public String getFromDate() {
+        return FromDate;
     }
 
-    public void setEnteryDate(String enteryDate) {
-        EnteryDate = enteryDate;
+    public void setFromDate(String fromDate) {
+        FromDate = fromDate;
     }
 
-    public String getFollowingDate() {
-        return FollowingDate;
+    public String getToDate() {
+        return ToDate;
     }
 
-    public void setFollowingDate(String followingDate) {
-        FollowingDate = followingDate;
+    public void setToDate(String toDate) {
+        ToDate = toDate;
     }
 
     public String getViewby() {
-        return Viewby;
+        return "";//Viewby;
     }
 
     public void setViewby(String viewby) {
         Viewby = viewby;
     }
 
-    String EnteryDate="";
-     String FollowingDate="";
+    String FromDate ="";
+     String ToDate ="";
      String Viewby="";
 
 
@@ -117,6 +110,8 @@ public class Vm_Following extends ViewModel {
                 GETFOLLOWCALL(context,resultlistner);
 
             }
+
+
         }).show();
 
 
@@ -129,6 +124,7 @@ public class Vm_Following extends ViewModel {
 
         custom_variables_and_method = Custom_Variables_And_Method.getInstance();
         dbHelper = new DBHelper(context);
+        shareclass=new  Shareclass();
 
     }
 
@@ -161,10 +157,9 @@ public class Vm_Following extends ViewModel {
     }
     public void getFollowdata(Activity context, OnResultlistner listner, IFollowingup ifollowingup)
     {
-        custom_variables_and_method = Custom_Variables_And_Method.getInstance();
-        dbHelper= new DBHelper(context);
-        shareclass=new  Shareclass();
-        progress1=new ProgressDialog(context);
+
+
+
 
         resultlistner=listner;
         iFollowingup=ifollowingup;
@@ -175,8 +170,8 @@ public class Vm_Following extends ViewModel {
         request.put("sDbName", shareclass.getValue(context, "company_code", "demo"));
         request.put("iPaId",getParty().getId());
         request.put("sFormType", "ORDER_STATUS_FOLLOWUP");
-        request.put("sFDATE",getFollowingDate());
-        request.put("sTDATE",getEnteryDate());
+        request.put("sFDATE", getFromDate() );
+        request.put("sTDATE", getToDate());
         request.put("sDOC_TYPE",getViewby());
 
 
@@ -187,41 +182,29 @@ public class Vm_Following extends ViewModel {
 
 
 
-        progress1.setMessage("Please Wait..\n" +" Fetching data");
-        progress1.show();
-        new CboServices(context, mHandler).customMethodForAllServices(request, "FollowUpGrid", FOLLOWUPGRID, tables);
+        new MyAPIService(context)
+                .execute(new ResponseBuilder("FollowUpGrid",request)
+                        .setTables(tables).setResponse(new CBOServices.APIResponse() {
+                            @Override
+                            public void onComplete(Bundle message) {
+                                //parser2(message);
+                                resultlistner.Sucessresult(followupdata);
+                            }
+
+                            @Override
+                            public void onResponse(Bundle response) {
+                                parser2(response);
+                            }
+
+
+                        })
+                );
+
 
 
 
     }
 
-
-    private final Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case FOLLOWUPGRID:
-                    progress1.dismiss();
-                    if ((null != msg.getData())) {
-                        parser2(msg.getData());
-                        //  parser1(msg.getData());
-
-                    }
-                    break;
-                case 99:
-                    progress1.dismiss();
-                    if ((null != msg.getData())) {
-
-                        // Toast.makeText(context, msg.getData().getString("Error"), Toast.LENGTH_SHORT).show();
-
-                    }
-                    break;
-                default:
-                    progress1.dismiss();
-
-            }
-        }
-    };
 
     private void parser2(Bundle result) {
         {
@@ -282,10 +265,10 @@ public class Vm_Following extends ViewModel {
                         JSONObject b = jsonArray.getJSONObject(j);
                         NEXTFOLLOWUP = b.getInt("NEXTFOLLOWUP");
                     }
-                    resultlistner.Sucessresult(followupdata);
+                    //resultlistner.Sucessresult(followupdata);
                    /* if (iFollowingup != null)
                         iFollowingup.updateparty(followupdata.size() > 0? followupdata.get(0) : new mFollowupgrid());*/
-                    progress1.dismiss();
+                    //progress1.dismiss();
 
 
 
@@ -293,7 +276,7 @@ public class Vm_Following extends ViewModel {
 
                 } catch (Exception e) {
 
-                    progress1.dismiss();
+                    //progress1.dismiss();
                     e.printStackTrace();
                 }
             }

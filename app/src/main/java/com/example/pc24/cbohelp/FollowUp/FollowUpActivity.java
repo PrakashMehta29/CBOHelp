@@ -231,7 +231,7 @@ public class FollowUpActivity extends AppCompatActivity implements SearchView.On
                 " Fetching data");
         progress1.setCancelable(false);
         progress1.show();
-        new CboServices(this, mHandler).customMethodForAllServices(request, "FollowUpGrid", FOLLOWUPGRID, tables);
+        new CboServices_Old(this, mHandler).customMethodForAllServices(request, "FollowUpGrid", FOLLOWUPGRID, tables);
 
         mFollow=new mFollowupgrid();
         // getSupportActionBar().setTitle(mFollow.getpANAME());

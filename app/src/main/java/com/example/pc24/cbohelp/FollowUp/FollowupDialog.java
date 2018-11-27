@@ -5,20 +5,11 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -29,25 +20,21 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.pc24.cbohelp.Followingup.CustomDatePicker;
 import com.example.pc24.cbohelp.PartyView.mParty;
 import com.example.pc24.cbohelp.R;
 import com.example.pc24.cbohelp.appPreferences.Shareclass;
 import com.example.pc24.cbohelp.dbHelper.DBHelper;
-import com.example.pc24.cbohelp.services.CboServices;
-import com.example.pc24.cbohelp.utils.Custom_Variables_And_Method;
+import com.example.pc24.cbohelp.services.CboServices_Old;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -77,6 +64,19 @@ public class FollowupDialog {
     private static final int FOLLOWUPGRID = 1;
     String Current_Date="";
     mParty  mParty;
+    String NextDate="";
+    CustomDatePicker customDatePicker;
+
+    public String getNextDate() {
+        return NextDate;
+    }
+
+    public FollowupDialog setNextDate(String nextDate) {
+
+
+        NextDate = nextDate;
+        return this;
+    }
 
     public mParty getmParty() {
         return mParty;
@@ -88,6 +88,7 @@ public class FollowupDialog {
 
     public interface IFollowupDialog{
         void onFollowSubmit();
+
     }
 
     public FollowupDialog(@NonNull Context context, Bundle Msg, Integer response_code,IFollowupDialog iFollowupDialog) {
@@ -121,8 +122,10 @@ public class FollowupDialog {
         final Calendar myCalendar = Calendar.getInstance();
 
         nextfollowup_Date = (Button) view.findViewById(R.id.nextfollowdatebtn);
-        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yy");
-        Current_Date=sdf.format(new Date());
+        nextfollowup_Date.setText(CustomDatePicker.currentDate( CustomDatePicker.ShowFormat));
+        Current_Date=CustomDatePicker.currentDate(CustomDatePicker.CommitFormat);
+       /* SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yy");
+
         nextfollowup_Date.setText(currentDate());
         final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
 
@@ -145,22 +148,42 @@ public class FollowupDialog {
                 nextfollowup_Date.setText(sdf.format(myCalendar.getTime()));
             }
 
-        };
+        };*/
         nextfollowup_Date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new DatePickerDialog(context, date, myCalendar
+
+
+
+
+
+
+                try {
+                    new CustomDatePicker(context, CustomDatePicker.getDate(Current_Date,CustomDatePicker.CommitFormat))
+                            .Show(CustomDatePicker.getDate(nextfollowup_Date.getText().toString(),  CustomDatePicker.ShowFormat)
+                            , new CustomDatePicker.ICustomDatePicker() {
+                                @Override
+                                public void onDateSet(Date date) {
+                                    nextfollowup_Date.setText(CustomDatePicker.formatDate(date,CustomDatePicker.ShowFormat));
+
+
+                                }
+                            });
+
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+              /*  new DatePickerDialog(context, date, myCalendar
                         .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();*/
 
             }
         });
         spinner_img_nextfollowdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new DatePickerDialog(context, date, myCalendar
-                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+                nextfollowup_Date.performClick();
 
             }
         });
@@ -171,6 +194,7 @@ public class FollowupDialog {
                 shareclass = new Shareclass();
                 dbHelper = new DBHelper(context);
 
+                try {
 
 //Extract the data…
 
@@ -181,7 +205,10 @@ public class FollowupDialog {
                 request.put("iPaId", Msg.getString("iPaId"));
                 request.put("sFollowUpdate",Current_Date );
                 request.put("sRemark", remark.getText().toString());
-                request.put("sNextFollowUpdate", nextfollowup_Date.getText().toString());
+              /*  request.put("sNextFollowUpdate",iFollowupDialog.Nextdate(CustomDatePicker.formatDate(date,CustomDatePicker.CommitFormat).toString()));*/
+
+                    request.put("sNextFollowUpdate",CustomDatePicker.formatDate( CustomDatePicker.getDate(nextfollowup_Date.getText().toString(),  CustomDatePicker.ShowFormat),CustomDatePicker.CommitFormat));
+
                 request.put("sContactPerson", Msg.getString("sContactPerson"));
                 request.put("sContactNo", Msg.getString("sContactNo"));
                 request.put("sFormType", "ORDER_STATUS_FOLLOWUP");
@@ -194,8 +221,10 @@ public class FollowupDialog {
                         " Fetching data");
                 progess.setCancelable(false);
                 progess.show();
-                new CboServices(context, mHandler).customMethodForAllServices(request, "FollowCommit", FOLLOWUPGRID, tables);
-
+                new CboServices_Old(context, mHandler).customMethodForAllServices(request, "FollowCommit", FOLLOWUPGRID, tables);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
 
                 dialog.dismiss();
 

@@ -52,13 +52,11 @@ import android.widget.Toast;
 
 
 import com.example.pc24.cbohelp.Followingup.NewPartyActivity;
-import com.example.pc24.cbohelp.PartyView.PartyActivity;
 import com.example.pc24.cbohelp.adaptor.New_order_confirm_Adaptor;
 import com.example.pc24.cbohelp.adaptor.ComplainList_Adapter;
 import com.example.pc24.cbohelp.appPreferences.Shareclass;
 import com.example.pc24.cbohelp.dbHelper.DBHelper;
-import com.example.pc24.cbohelp.services.CboServices;
-import com.example.pc24.cbohelp.utils.ClientNew.ClientList;
+import com.example.pc24.cbohelp.services.CboServices_Old;
 import com.example.pc24.cbohelp.utils.Custom_Variables_And_Method;
 import com.example.pc24.cbohelp.utils.GalleryUtil;
 import com.example.pc24.cbohelp.utils.ImageFilePath;
@@ -374,7 +372,7 @@ public class Client_Complain_list extends AppCompatActivity implements SearchVie
         if (adaptor_data.size() == 0)
             progress1.show();
 
-        new CboServices(this,mHandler).customMethodForAllServices(request,"ComplaintGrid",MESSAGE_INTERNET_main,tables);
+        new CboServices_Old(this,mHandler).customMethodForAllServices(request,"ComplaintGrid",MESSAGE_INTERNET_main,tables);
 
         //End of call to service
 
@@ -663,7 +661,7 @@ public class Client_Complain_list extends AppCompatActivity implements SearchVie
             progress1.setCancelable(false);
             progress1.show();
 
-            new CboServices(Client_Complain_list.this, mHandler).customMethodForAllServices(request, "ComplaintCommit", MESSAGE_INTERNET_COMPLAIN_COMIT, tables);
+            new CboServices_Old(Client_Complain_list.this, mHandler).customMethodForAllServices(request, "ComplaintCommit", MESSAGE_INTERNET_COMPLAIN_COMIT, tables);
 
             //End of call to service
             update_list = false;
@@ -736,7 +734,7 @@ public class Client_Complain_list extends AppCompatActivity implements SearchVie
                 new_order_adaptor_alert.notifyDataSetChanged();
             } catch (JSONException e) {
                 Log.d("MYAPP", "objects are: " + e.toString());
-                CboServices.getAlert(this,"Missing field error",e.toString());
+                CboServices_Old.getAlert(this,"Missing field error",e.toString());
                 List toEmailList = Arrays.asList("support@cboinfotech.com".split("\\s*,\\s*"));
                 new SendMailTask(this).execute("support@cboinfotech.com",
                         "Cbo12345",toEmailList , "Missing field error", e.toString());
@@ -814,7 +812,7 @@ public class Client_Complain_list extends AppCompatActivity implements SearchVie
             } catch (JSONException e) {
                 swipeRefreshLayout.setRefreshing(false);
                 Log.d("MYAPP", "objects are: " + e.toString());
-                CboServices.getAlert(this,"Missing field error",e.toString());
+                CboServices_Old.getAlert(this,"Missing field error",e.toString());
                 List toEmailList = Arrays.asList("support@cboinfotech.com".split("\\s*,\\s*"));
                 new SendMailTask(this).execute("support@cboinfotech.com",
                         "Cbo12345",toEmailList , "Missing field error", e.toString());
@@ -880,7 +878,7 @@ public class Client_Complain_list extends AppCompatActivity implements SearchVie
 
             } catch (JSONException e) {
                 Log.d("MYAPP", "objects are: " + e.toString());
-                CboServices.getAlert(this,"Missing field error",e.toString());
+                CboServices_Old.getAlert(this,"Missing field error",e.toString());
                 List toEmailList = Arrays.asList("support@cboinfotech.com".split("\\s*,\\s*"));
                 new SendMailTask(this).execute("support@cboinfotech.com",
                         "Cbo12345",toEmailList , "Missing field error", e.toString());
@@ -1111,7 +1109,7 @@ public class Client_Complain_list extends AppCompatActivity implements SearchVie
         progress1.setCancelable(false);
         progress1.show();
 
-        new CboServices(Client_Complain_list.this, mHandler).customMethodForAllServices(request, "Update_Complaint", MESSAGE_INTERNET_COMPLAIN_COMIT, tables);
+        new CboServices_Old(Client_Complain_list.this, mHandler).customMethodForAllServices(request, "Update_Complaint", MESSAGE_INTERNET_COMPLAIN_COMIT, tables);
 
         //End of call to service
         update_list=false;

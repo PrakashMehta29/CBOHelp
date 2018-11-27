@@ -15,18 +15,32 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.pc24.cbohelp.AddParty.PartyDetail;
+import com.example.pc24.cbohelp.Followingup.CustomDatePicker;
+import com.example.pc24.cbohelp.Followingup.NewPartyActivity;
 import com.example.pc24.cbohelp.R;
 import com.example.pc24.cbohelp.appPreferences.Shareclass;
 import com.example.pc24.cbohelp.dbHelper.DBHelper;
-import com.example.pc24.cbohelp.services.CboServices;
+import com.example.pc24.cbohelp.services.CboServices_Old;
+import com.example.pc24.cbohelp.utils.MyAPIService;
+import com.uenics.javed.CBOLibrary.CBOServices;
+import com.uenics.javed.CBOLibrary.ResponseBuilder;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,9 +57,18 @@ public class PartyActivity extends AppCompatActivity implements SearchView.OnQue
     SwipeController swipeController = null;
     Shareclass shareclass;
     DBHelper dbHelper;
+    ImageView img_followdate, img_nextfollowdate, Img_party;
+    RadioGroup radioGroup;
+    RadioButton entrydate, followingdate;
+    Button fromdatebtn, todatebtn, Gobtn;
+    LinearLayout  Lmissedtype;
+    TextView PartyTxt;
+     String ViewBy="";
+     TextView TotalParty;
 
-    mParty mParty;
-    String PAid="";
+    String FDate="",Todate="";
+
+
     Status status=Status.All;
 
 
@@ -78,6 +101,19 @@ public class PartyActivity extends AppCompatActivity implements SearchView.OnQue
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.party_list);
+
+        fromdatebtn = (Button) findViewById(R.id.fromdatebtn);
+        todatebtn = (Button) findViewById(R.id.todatebtn);
+        img_followdate = (ImageView) findViewById(R.id.spinner_img_followdate);
+        img_nextfollowdate = (ImageView) findViewById(R.id.spinner_img_nextfollowdate);
+        PartyTxt = (TextView) findViewById(R.id.party_name);
+        Lmissedtype = (LinearLayout) findViewById(R.id.layout_party);
+         TotalParty=(TextView) findViewById(R.id.Tpartycount);
+        Gobtn = (Button) findViewById(R.id.btn_go);
+
+        radioGroup = (RadioGroup) findViewById(R.id.viewby);
+        entrydate = (RadioButton) findViewById(R.id.entrydate);
+        followingdate = (RadioButton) findViewById(R.id.followingdate);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         if (getSupportActionBar() != null) {
 
@@ -89,72 +125,176 @@ public class PartyActivity extends AppCompatActivity implements SearchView.OnQue
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         getSupportActionBar().setTitle(" Select Client");
-        GetclientDetail();
-
-
-    }
-
-    private void GetclientDetail( ) {
-
-        progress1 = new ProgressDialog(this);
+        context = this;
         shareclass = new Shareclass();
-        dbHelper = new DBHelper(this);
 
 
 
 
-        HashMap<String, String> request = new HashMap<>();
-        request.put("sDbName", shareclass.getValue(this, "company_code", "demo"));
-        request.put("iUserId", "140");
-        request.put("iStatus", ""+status.getValue());
-
-        ArrayList<Integer> tables = new ArrayList<>();
-        tables.add(-1);
 
 
-        progress1.setMessage("Please Wait..\n" +
-                " Fetching data");
-        progress1.setCancelable(false);
-        progress1.show();
-        new CboServices(this, mHandler).customMethodForAllServices(request, "ClientMainGrid", CLIENTMAINGRID, tables);
+        fromdatebtn.setText(CustomDatePicker.currentDate( CustomDatePicker.ShowFormat));
+        FDate=CustomDatePicker.currentDate(CustomDatePicker.CommitFormat);
+        todatebtn.setText(CustomDatePicker.currentDate( CustomDatePicker.ShowFormat));
+        Todate=CustomDatePicker.currentDate(CustomDatePicker.CommitFormat);
 
-        setupRecyclerView();
-    }
+        Gobtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
+                GetAllParty();
+                /*if (Validatepaname()) {
 
-    private final Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case CLIENTMAINGRID:
+                }
+                if (!PartyTxt.getText().toString().equals("")) {
+                    GetAllParty();
+                } else {
+                    Toast.makeText(context, "Please Select Party Name First", Toast.LENGTH_SHORT).show();
+                }*/
+            }
+        });
+        fromdatebtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    new CustomDatePicker(context, null,
+                            CustomDatePicker.getDate(todatebtn.getText().toString(), CustomDatePicker.ShowFormat)
+                    ).Show(CustomDatePicker.getDate(fromdatebtn.getText().toString(),  CustomDatePicker.ShowFormat)
+                            , new CustomDatePicker.ICustomDatePicker() {
+                                @Override
+                                public void onDateSet(Date date) {
+                                    fromdatebtn.setText(CustomDatePicker.formatDate(date,CustomDatePicker.ShowFormat));
+                                    FDate=(CustomDatePicker.formatDate(date,CustomDatePicker.CommitFormat));
+                                    //vm_following.setFromDate(CustomDatePicker.formatDate(date,CustomDatePicker.CommitFormat));
+                                }
+                            });
 
-                    if ((null != msg.getData())) {
-                        parser2(msg.getData());
-                        //  parser1(msg.getData());
-
-                    }
-                    break;
-                case 99:
-                    progress1.dismiss();
-                    if ((null != msg.getData())) {
-
-                        Toast.makeText(getApplicationContext(), msg.getData().getString("Error"), Toast.LENGTH_SHORT).show();
-
-                    }
-                    break;
-                default:
-                    progress1.dismiss();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
 
             }
+        });
+
+        todatebtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    new CustomDatePicker(context,
+                            CustomDatePicker.getDate(fromdatebtn.getText().toString(),  CustomDatePicker.ShowFormat))
+                            .Show(CustomDatePicker.getDate(todatebtn.getText().toString(),  CustomDatePicker.ShowFormat)
+                                    , new CustomDatePicker.ICustomDatePicker() {
+                                        @Override
+                                        public void onDateSet(Date date) {
+                                            todatebtn.setText(CustomDatePicker.formatDate(date,CustomDatePicker.ShowFormat));
+                                             Todate=CustomDatePicker.formatDate(date,CustomDatePicker.CommitFormat);
+                                           // vm_following.setToDate(CustomDatePicker.formatDate(date,CustomDatePicker.CommitFormat));
+                                        }
+                                    });
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        img_followdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fromdatebtn.performClick();
+
+            }
+        });
+        img_nextfollowdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                todatebtn.performClick();
+            }
+        });
+
+
+        Lmissedtype.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
+                Intent intent1 = new Intent(PartyActivity.this, PartyActivity.class);
+                startActivityForResult(intent1, 0);
+            }
+        });
+
+        ViewBy="F";
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                int selectedId = radioGroup.getCheckedRadioButtonId();
+                if (selectedId == R.id.entrydate) {
+                    ViewBy="N";
+                } else {
+                    ViewBy="F";
+                }
+            }
+        });
+
+        /*if (PartyTxt.getText().toString().equals("")) {
+            hideOption(R.id.add_remark);
         }
-    };
+        */
+        setupRecyclerView();
+     //   GetclientDetail();
+
+
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        GetAllParty();
+
+    }
+
+    private void GetAllParty( ) {
+
+        HashMap<String, String> request = new HashMap<>();
+        request.put("sDbName", shareclass.getValue(context, "company_code", "demo"));
+        request.put("iUserId", "140");
+        request.put("iStatus", ""+status.getValue());
+        request.put("sFDATE",FDate );
+        request.put("sTDATE", Todate);
+        request.put("sDOC_TYPE",ViewBy);
+
+
+        new MyAPIService(context)
+                .execute(new ResponseBuilder("ClientMainGrid",request)
+                        .setResponse(new CBOServices.APIResponse() {
+                            @Override
+                            public void onComplete(Bundle message) {
+                                //parser2(message);
+                                mAdapter = new Partyviewapdater(context, parytdata);
+                                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+                                recyclerView.setLayoutManager(mLayoutManager);
+                                recyclerView.setItemAnimator(new DefaultItemAnimator());
+                                recyclerView.setAdapter(mAdapter);
+                                TotalParty.setText(""+mAdapter.getItemCount());
+                            }
+
+                            @Override
+                            public void onResponse(Bundle response) {
+                                parser2(response);
+                            }
+
+
+                        })
+                );
+
+
+
+    }
+
+
 
     private void parser2(Bundle result) {
         {
-            if ((result == null)) {
-                progress1.dismiss();
 
-            } else {
                 try {
 
 
@@ -165,20 +305,14 @@ public class PartyActivity extends AppCompatActivity implements SearchView.OnQue
                         JSONObject c = jsonArray1.getJSONObject(i);
                         parytdata.add(   rptModel = new mParty(c.getString("PA_ID"),c.getString("PA_NAME"),c.getString("MOBILE"),c.getString("PERSON"),c.getString("STATUS")));
                     }
-                    mAdapter = new Partyviewapdater(context, parytdata);
-                    RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-                    recyclerView.setLayoutManager(mLayoutManager);
-                    recyclerView.setItemAnimator(new DefaultItemAnimator());
-                    recyclerView.setAdapter(mAdapter);
 
 
-                    progress1.dismiss();
+
                 } catch (Exception e) {
-                    progress1.dismiss();
                     e.printStackTrace();
                 }
             }
-        }
+
 
     }
 
@@ -212,7 +346,7 @@ public class PartyActivity extends AppCompatActivity implements SearchView.OnQue
     /*    ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);
         itemTouchhelper.attachToRecyclerView(recyclerView);*/
 
-        recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+    recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
            @Override
            public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
               // swipeController.onDraw(c);
@@ -253,19 +387,19 @@ public class PartyActivity extends AppCompatActivity implements SearchView.OnQue
         switch (id) {
             case R.id.all:
                 status=Status.All;
-                GetclientDetail();
+                GetAllParty();
                 break;
             case R.id.done:
                 status=Status.Done;
-                GetclientDetail();
+                GetAllParty();
                 break;
             case R.id.inProcess:
                 status=Status.inProcess;
-                GetclientDetail();
+                GetAllParty();
                 break;
             case R.id.notInterested:
                 status=Status.NotInterested;
-                GetclientDetail();
+                GetAllParty();
 
                 break;
             case R.id.add_party:
@@ -314,5 +448,16 @@ public class PartyActivity extends AppCompatActivity implements SearchView.OnQue
         return false;
     }
 
+    public boolean Validatepaname() {
+        String username = PartyTxt.getText().toString().trim();
+
+        if (username.isEmpty()) {
+            PartyTxt.setError("Please enter your name");
+            return false;
+        } else {
+            PartyTxt.setError(null);
+            return true;
+        }
+    }
 }
 

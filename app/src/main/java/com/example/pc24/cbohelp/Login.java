@@ -23,7 +23,7 @@ import android.widget.Toast;
 
 import com.example.pc24.cbohelp.appPreferences.Shareclass;
 import com.example.pc24.cbohelp.dbHelper.DBHelper;
-import com.example.pc24.cbohelp.services.CboServices;
+import com.example.pc24.cbohelp.services.CboServices_Old;
 import com.example.pc24.cbohelp.utils.SendMailTask;
 import com.google.firebase.messaging.FirebaseMessaging;
 
@@ -152,7 +152,7 @@ public class Login extends AppCompatActivity {
         progress1.setCancelable(false);
         progress1.show();
 
-        new CboServices(this,mHandler).customMethodForAllServices(request,"LOGIN_CHAT",MESSAGE_INTERNET,tables);
+        new CboServices_Old(this,mHandler).customMethodForAllServices(request,"LOGIN_CHAT",MESSAGE_INTERNET,tables);
 
         //End of call to service
     }
@@ -254,7 +254,7 @@ public class Login extends AppCompatActivity {
 
             } catch (JSONException e) {
                 Log.d("MYAPP", "objects are: " + e.toString());
-                CboServices.getAlert(this,"Missing field error",e.toString());
+                CboServices_Old.getAlert(this,"Missing field error",e.toString());
                 List toEmailList = Arrays.asList("support@cboinfotech.com".split("\\s*,\\s*"));
                 new SendMailTask(this).execute("support@cboinfotech.com",
                         "Cbo12345",toEmailList , "Missing field error", e.toString());
@@ -281,7 +281,7 @@ public class Login extends AppCompatActivity {
         // tables.add(0);
 
 
-        new CboServices(this,mHandler).customMethodForAllServices(request,"GCM_TOKEN_UPDATE",MESSAGE_INTERNET,tables);
+        new CboServices_Old(this,mHandler).customMethodForAllServices(request,"GCM_TOKEN_UPDATE",MESSAGE_INTERNET,tables);
         if( shareclass.getValue(this,"DESIG_ID","0").equals("100")){
             FirebaseMessaging.getInstance().subscribeToTopic("Admin");
         }
