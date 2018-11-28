@@ -87,6 +87,13 @@ public class NewPartyActivity extends AppCompatActivity implements SearchView.On
 
         }
 
+        Intent intent = getIntent();
+        vm_following.setParty(new mParty(intent.getExtras().getString("Paid"), intent.getExtras().getString("Name"),
+                intent.getExtras().getString("Mobile"), intent.getExtras().getString("Person"),
+                intent.getExtras().getString("Status")
+        ));
+
+        GetclientDetail(context);
         fromdatebtn.setText(CustomDatePicker.currentDate( CustomDatePicker.ShowFormat));
         vm_following.setFromDate(CustomDatePicker.currentDate( CustomDatePicker.CommitFormat));
         todatebtn.setText(CustomDatePicker.currentDate( CustomDatePicker.ShowFormat));
@@ -175,7 +182,7 @@ public class NewPartyActivity extends AppCompatActivity implements SearchView.On
             }
         });
 
-
+/*
         Lmissedtype.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -184,7 +191,7 @@ public class NewPartyActivity extends AppCompatActivity implements SearchView.On
                 Intent intent1 = new Intent(NewPartyActivity.this, PartyActivity.class);
                 startActivityForResult(intent1, 0);
             }
-        });
+        });*/
 
         vm_following.setViewby("F");
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -203,11 +210,16 @@ public class NewPartyActivity extends AppCompatActivity implements SearchView.On
             hideOption(R.id.add_remark);
         }
 
-        Lmissedtype.performClick();
+
+
+
+
     }
 
 
-    @Override
+
+
+   /* @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 0 && resultCode == RESULT_OK) {
             vm_following.setParty(new mParty(data.getExtras().getString("Paid"), data.getExtras().getString("Name"),
@@ -216,7 +228,7 @@ public class NewPartyActivity extends AppCompatActivity implements SearchView.On
             ));
             GetclientDetail(context);
         }
-    }
+    }*/
 
     private void GetclientDetail(final Context context) {
 
@@ -224,15 +236,15 @@ public class NewPartyActivity extends AppCompatActivity implements SearchView.On
         vm_following.GETFOLLOWCALL(context, new Vm_Following.OnResultlistner() {
             @Override
             public void Sucessresult(ArrayList<mFollowupgrid> mFollowupgrids) {
-                mAdapter = new NewPartyActvityAdapter(context, mFollowupgrids);
 
+                mAdapter = new NewPartyActvityAdapter(context, mFollowupgrids);
                 RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
                 recyclerView.setLayoutManager(mLayoutManager);
                 recyclerView.setItemAnimator(new DefaultItemAnimator());
                 recyclerView.setAdapter(mAdapter);
-
                 ViewCompat.setNestedScrollingEnabled(
                         recyclerView, false);
+
                 //   appBarLayout.setExpanded(false);
                 //appBarLayout.setExpanded(true, true);
             }
@@ -284,10 +296,6 @@ public class NewPartyActivity extends AppCompatActivity implements SearchView.On
                 Toast.makeText(context, "Please Select Party Name", Toast.LENGTH_SHORT).show();
 
             }
-        }
-        else if(id==R.id.menu_search){
-
-            Lmissedtype.performClick();
         }
         else {
             finish();

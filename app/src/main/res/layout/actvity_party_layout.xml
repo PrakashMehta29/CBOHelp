@@ -224,6 +224,7 @@
             android:layout_height="40dp"
             android:layout_marginTop="2dp"
             android:weightSum="3"
+            android:visibility="gone"
             android:background="@drawable/custom_round_white_view_bg"
             android:orientation="horizontal">
 
@@ -277,10 +278,10 @@
     </LinearLayout>
 
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="@color/colorPrimary"/>
+    <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="2dp"-->
+        <!--android:background="@color/colorPrimary"/>-->
     <include layout="@layout/actvity_followingup_grid" />
 
 

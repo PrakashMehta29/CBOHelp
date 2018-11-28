@@ -10,7 +10,11 @@ import android.widget.TextView;
 
 import com.example.pc24.cbohelp.R;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 
 public class NewPartyActvityAdapter extends RecyclerView.Adapter<NewPartyActvityAdapter.MyViewHolder> {
 
@@ -18,13 +22,13 @@ public class NewPartyActvityAdapter extends RecyclerView.Adapter<NewPartyActvity
     Context context;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView followupdate,nxtfollowupdate,remark;
+        public TextView Followdate, Nxtfollowdate,remark;
         ImageView viewbrtn;
 
         public MyViewHolder(View view) {
             super(view);
-            nxtfollowupdate=(TextView)view.findViewById(R.id.nextfolowdate);
-            followupdate = (TextView) view.findViewById(R.id.followdate);
+            Nxtfollowdate =(TextView)view.findViewById(R.id.nextfolowdate);
+            Followdate = (TextView) view.findViewById(R.id.followdate);
             remark=(TextView) view.findViewById(R.id.fremark);
 
 
@@ -48,13 +52,29 @@ public class NewPartyActvityAdapter extends RecyclerView.Adapter<NewPartyActvity
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
+
+
         mFollowupgrid mFollowupgrid=followdata.get(position);
-        holder.nxtfollowupdate.setText(mFollowupgrid.getnEXTFOLLOWUPDATE());
-        holder.followupdate.setText(mFollowupgrid.getfOLLOWUPDATE());
+        ConvertDate(mFollowupgrid.getfOLLOWUPDATE());
+
+        holder.Followdate.setText(ConvertDate(mFollowupgrid.getfOLLOWUPDATE()));
+        holder.Nxtfollowdate.setText(ConvertDate(mFollowupgrid.getnEXTFOLLOWUPDATE()));
+
+      /*  try {
+            holder.Nxtfollowdate.setText((CharSequence) CustomDatePicker.getDate(mFollowupgrid.getnEXTFOLLOWUPDATE(),CustomDatePicker.CommitFormat));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }*/
         holder.remark.setText(mFollowupgrid.getfREMARK());
     }
 
+    private String ConvertDate(String ParsingDate) {
 
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy");
+        String date = formatter.format(Date.parse(ParsingDate));
+
+        return date;
+    }
 
 
     @Override

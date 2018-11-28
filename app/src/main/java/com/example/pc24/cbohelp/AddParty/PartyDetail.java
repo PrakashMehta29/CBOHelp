@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.pc24.cbohelp.FollowUp.FollowupDialog;
 import com.example.pc24.cbohelp.PartyView.mParty;
 import com.example.pc24.cbohelp.R;
 import com.example.pc24.cbohelp.Spinner_Dialog;
@@ -60,7 +61,9 @@ public class PartyDetail extends AppCompatActivity {
     ArrayList<DropDownModel> UserData = new ArrayList<DropDownModel>();
     ArrayList<DropDownModel> UserData1 = new ArrayList<DropDownModel>();
     ArrayList<DropDownModel> UserDataCopy = new ArrayList<DropDownModel>();
-
+    private  static final int FOLLOWUP_DIALOG=7;
+    Bundle bundle;
+    String  PAID="";
 
     //idpassword
 /*1554hari
@@ -87,6 +90,7 @@ public class PartyDetail extends AppCompatActivity {
     Menu menu;
 
     ImageView CompspinImg, UserSpingImg, User1SpinImg, statsuimg;
+
 
     public void onCreate(Bundle b) {
         super.onCreate(b);
@@ -309,7 +313,7 @@ public class PartyDetail extends AppCompatActivity {
     }
 
     public void Clientpoulate() {
-        Bundle bundle = getIntent().getExtras();
+        bundle = getIntent().getExtras();
 
 
         if (bundle != null) {
@@ -411,21 +415,51 @@ public class PartyDetail extends AppCompatActivity {
         request.put("sAdd2", adress2.getText().toString());
         request.put("sAdd3", adress3.getText().toString());
         request.put("sAdd4", adress4.getText().toString());
-        /*ArrayList<Integer> tables = new ArrayList<>();
+        ArrayList<Integer> tables = new ArrayList<>();
         tables.add(0);
-*/
 
 
         new MyAPIService(context)
 
                 .execute(new ResponseBuilder("FollowUpOrder_Commit",request)
-                      /*  .setTables(tables)
-                        .setMultiTable(false)*/
+                        .setTables(tables)
                         .setResponse(new CBOServices.APIResponse() {
                             @Override
                             public void onComplete(Bundle message) {
 
+
+
+                                if (bundle == null) {
+                                    bundle=new Bundle();
+                                    bundle.putString("iId", "0");
+                                    bundle.putInt("iSrno", 1);
+                                    bundle.putString("iPaid", PAID);
+                                    bundle.putString("header", paname.getText().toString());
+                                    bundle.putString("sContactPerson", person.getText().toString());
+                                    bundle.putString("sContactNo", mobile.getText().toString());
+                                    bundle.putString("iUserId",  userId);
+
+                                    new FollowupDialog(context, bundle, FOLLOWUP_DIALOG, false,new FollowupDialog.IFollowupDialog() {
+                                        @Override
+                                        public void onFollowSubmit() {
+
+                                            Toast.makeText(PartyDetail.this, "Data Submitted", Toast.LENGTH_SHORT).show();
+                                            finish();
+
+                                        }
+
+
+                                    }).show();
+
+                                }
+
+                                else {
+                                    Toast.makeText(PartyDetail.this, "Data Submitted", Toast.LENGTH_SHORT).show();
+                                    finish();
+
+                                   }
                             }
+
 
                             @Override
                             public void onResponse(Bundle response) {
@@ -443,12 +477,7 @@ public class PartyDetail extends AppCompatActivity {
 
 
 //        new CboServices_Old(getApplicationContext(), mHandler).customMethodForAllServices(request, "FollowUpOrder_Commit", FollowUpOrder_Commit, tables);
-        Toast.makeText(PartyDetail.this, "Data Submitted", Toast.LENGTH_SHORT).show();
-//        Intent intent = new Intent(PartyDetail.this, PartyActivity.class);
-////        intent.putExtra("iUser_ID", String.valueOf(User.getSelectedItemId()));
-////        intent.putExtras(intent);
-//        startActivity(intent);
-        finish();
+
     }
 /*
 
@@ -704,6 +733,23 @@ public class PartyDetail extends AppCompatActivity {
     private void parser2(Bundle result) {
         if (result != null) {
 
+            try {
+
+
+                String table0 = result.getString("Tables0");
+                JSONArray jsonArray1 = new JSONArray(table0);
+                mPartyFields.clear();
+                for (int i = 0; i < jsonArray1.length(); i++) {
+                    JSONObject c = jsonArray1.getJSONObject(i);
+                    PAID = c.getString("PA_ID");
+
+
+                }
+
+
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
 
         }
 

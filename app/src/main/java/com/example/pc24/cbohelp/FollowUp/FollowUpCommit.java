@@ -41,9 +41,9 @@ public  class FollowUpCommit  extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.actvity_followcommit_grid_layout);
+
         paname=(EditText) findViewById(R.id.party_name);
         mobile=(EditText) findViewById(R.id.party_mobile_no);
-
         person=(EditText) findViewById(R.id.party_person);
         website=(EditText) findViewById(R.id.remark);
         EmplyeeNo=(EditText) findViewById(R.id.party_empolyye_no);

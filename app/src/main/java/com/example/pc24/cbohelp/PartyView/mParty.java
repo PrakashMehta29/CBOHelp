@@ -7,8 +7,8 @@ public class mParty {
   private  String id,Name,mobile,person,status,viewBy,FromDate,Todate;
 Context context;
 
-    public mParty(Context context) {
-this.context=context;
+    public mParty() {
+
     }
     public mParty(String Id,String name) {
         this.id=Id;

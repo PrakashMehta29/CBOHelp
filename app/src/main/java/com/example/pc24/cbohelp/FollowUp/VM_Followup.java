@@ -87,7 +87,6 @@ public class VM_Followup extends ViewModel  {
     }
 
     public VM_Followup() {
-
         super();
         custom_variables_and_method = Custom_Variables_And_Method.getInstance();
         dbHelper = new DBHelper(context);
@@ -106,9 +105,7 @@ public class VM_Followup extends ViewModel  {
     }
 
     public void GETFOLLOWCALL(Context context, OnResulyListner resulyListner){
-
-
-      if(mFollowupgrids==null){
+        if(mFollowupgrids==null){
             getFollowdata( (Activity)context,resulyListner,iFollowup);
       }else {
           resulyListner.Sucessresult(mFollowupgrids);

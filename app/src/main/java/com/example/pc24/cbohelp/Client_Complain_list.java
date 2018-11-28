@@ -52,6 +52,7 @@ import android.widget.Toast;
 
 
 import com.example.pc24.cbohelp.Followingup.NewPartyActivity;
+import com.example.pc24.cbohelp.PartyView.PartyActivity;
 import com.example.pc24.cbohelp.adaptor.New_order_confirm_Adaptor;
 import com.example.pc24.cbohelp.adaptor.ComplainList_Adapter;
 import com.example.pc24.cbohelp.appPreferences.Shareclass;
@@ -414,7 +415,7 @@ public class Client_Complain_list extends AppCompatActivity implements SearchVie
                 Show_filter();
                 break;
             case R.id.party_status:
-                Intent intent3=new Intent(Client_Complain_list.this, NewPartyActivity.class);
+                Intent intent3=new Intent(Client_Complain_list.this, PartyActivity.class);
 
                 startActivity(intent3);
 

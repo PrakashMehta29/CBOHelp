@@ -20,9 +20,9 @@ public class CustomDatePicker implements DatePickerDialog.OnDateSetListener{
     private Date minDate;
     private Date maxDate;
     private Context context;
-    dlvc
-    dfkfd
-        gjhgj
+
+    public static String ShowFormat = "dd-MMM-yyyy";
+    public static String CommitFormat = "MM/dd/yyyy";
     
 
     public static Date getDate(String date,String format) throws java.text.ParseException {
@@ -31,18 +31,23 @@ public class CustomDatePicker implements DatePickerDialog.OnDateSetListener{
         return date1;
     }
 
+    public static String formatDate(Date date,String format) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(format);
+        String  currentDate = dateFormat.format(date);
+        return currentDate;
+    }
+
+
     public static String currentDate() {
         return currentDate("MM/dd/yyyy");
     }
 
     public static String currentDate(String format) {
-
-        SimpleDateFormat dateFormat = new SimpleDateFormat(format);
-
         Date todayDate = new Date();
-        String  currentDate = dateFormat.format(todayDate);
-        return currentDate;
+        return formatDate(todayDate,format);
     }
+
+
 
     public void Show(Date date){
         Show(date,listener);
@@ -71,7 +76,16 @@ public class CustomDatePicker implements DatePickerDialog.OnDateSetListener{
     }
     @Override
     public void onDateSet(android.widget.DatePicker view, int year, int month, int dayOfMonth) {
-        listener.onDateSet(year,month+1,dayOfMonth);
+        month = (month+1);
+        String date = ""+dayOfMonth;
+        date += "/"+ month;
+        date += "/"+ year;
+
+        try {
+            listener.onDateSet(getDate( date,"dd/MM/yyyy"));
+        } catch (java.text.ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     public CustomDatePicker(Context context,Date FromDate, Date ToDate,ICustomDatePicker listener) {
@@ -106,7 +120,7 @@ public class CustomDatePicker implements DatePickerDialog.OnDateSetListener{
 
     // This is the method from the CustomDatePicker fragment to implement in the Main Activity
     public interface ICustomDatePicker{
-         void onDateSet( int year, int month , int dayOfMonth);
+         void onDateSet(Date date);
     }
 
 

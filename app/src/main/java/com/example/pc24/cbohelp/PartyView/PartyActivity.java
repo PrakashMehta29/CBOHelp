@@ -2,12 +2,11 @@ package com.example.pc24.cbohelp.PartyView;
 
 import android.app.ProgressDialog;
 import android.app.SearchManager;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,15 +21,12 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.pc24.cbohelp.AddParty.PartyDetail;
 import com.example.pc24.cbohelp.Followingup.CustomDatePicker;
-import com.example.pc24.cbohelp.Followingup.NewPartyActivity;
 import com.example.pc24.cbohelp.R;
 import com.example.pc24.cbohelp.appPreferences.Shareclass;
 import com.example.pc24.cbohelp.dbHelper.DBHelper;
-import com.example.pc24.cbohelp.services.CboServices_Old;
 import com.example.pc24.cbohelp.utils.MyAPIService;
 import com.uenics.javed.CBOLibrary.CBOServices;
 import com.uenics.javed.CBOLibrary.ResponseBuilder;
@@ -65,8 +61,9 @@ public class PartyActivity extends AppCompatActivity implements SearchView.OnQue
     TextView PartyTxt;
      String ViewBy="";
      TextView TotalParty;
-
+    String Paid="",SelectedPaid="";
     String FDate="",Todate="";
+    Vm_Party vm_party=null;
 
 
     Status status=Status.All;
@@ -101,16 +98,14 @@ public class PartyActivity extends AppCompatActivity implements SearchView.OnQue
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.party_list);
-
         fromdatebtn = (Button) findViewById(R.id.fromdatebtn);
         todatebtn = (Button) findViewById(R.id.todatebtn);
         img_followdate = (ImageView) findViewById(R.id.spinner_img_followdate);
         img_nextfollowdate = (ImageView) findViewById(R.id.spinner_img_nextfollowdate);
         PartyTxt = (TextView) findViewById(R.id.party_name);
         Lmissedtype = (LinearLayout) findViewById(R.id.layout_party);
-         TotalParty=(TextView) findViewById(R.id.Tpartycount);
+        TotalParty=(TextView) findViewById(R.id.Tpartycount);
         Gobtn = (Button) findViewById(R.id.btn_go);
-
         radioGroup = (RadioGroup) findViewById(R.id.viewby);
         entrydate = (RadioButton) findViewById(R.id.entrydate);
         followingdate = (RadioButton) findViewById(R.id.followingdate);
@@ -127,30 +122,24 @@ public class PartyActivity extends AppCompatActivity implements SearchView.OnQue
         getSupportActionBar().setTitle(" Select Client");
         context = this;
         shareclass = new Shareclass();
-
+        vm_party = ViewModelProviders.of(PartyActivity.this).get(Vm_Party.class);
 
 
 
 
 
         fromdatebtn.setText(CustomDatePicker.currentDate( CustomDatePicker.ShowFormat));
-        FDate=CustomDatePicker.currentDate(CustomDatePicker.CommitFormat);
+      //  FDate=CustomDatePicker.currentDate(CustomDatePicker.CommitFormat);
+        vm_party.setFadte(CustomDatePicker.currentDate(CustomDatePicker.CommitFormat));
         todatebtn.setText(CustomDatePicker.currentDate( CustomDatePicker.ShowFormat));
-        Todate=CustomDatePicker.currentDate(CustomDatePicker.CommitFormat);
-
+       // Todate=CustomDatePicker.currentDate(CustomDatePicker.CommitFormat);
+        vm_party.setTodate(CustomDatePicker.currentDate(CustomDatePicker.CommitFormat));
         Gobtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 GetAllParty();
-                /*if (Validatepaname()) {
 
-                }
-                if (!PartyTxt.getText().toString().equals("")) {
-                    GetAllParty();
-                } else {
-                    Toast.makeText(context, "Please Select Party Name First", Toast.LENGTH_SHORT).show();
-                }*/
             }
         });
         fromdatebtn.setOnClickListener(new View.OnClickListener() {
@@ -164,7 +153,8 @@ public class PartyActivity extends AppCompatActivity implements SearchView.OnQue
                                 @Override
                                 public void onDateSet(Date date) {
                                     fromdatebtn.setText(CustomDatePicker.formatDate(date,CustomDatePicker.ShowFormat));
-                                    FDate=(CustomDatePicker.formatDate(date,CustomDatePicker.CommitFormat));
+                                   // FDate=(CustomDatePicker.formatDate(date,CustomDatePicker.CommitFormat));
+                                    vm_party.setFadte(CustomDatePicker.formatDate(date,CustomDatePicker.CommitFormat));
                                     //vm_following.setFromDate(CustomDatePicker.formatDate(date,CustomDatePicker.CommitFormat));
                                 }
                             });
@@ -187,8 +177,8 @@ public class PartyActivity extends AppCompatActivity implements SearchView.OnQue
                                         @Override
                                         public void onDateSet(Date date) {
                                             todatebtn.setText(CustomDatePicker.formatDate(date,CustomDatePicker.ShowFormat));
-                                             Todate=CustomDatePicker.formatDate(date,CustomDatePicker.CommitFormat);
-                                           // vm_following.setToDate(CustomDatePicker.formatDate(date,CustomDatePicker.CommitFormat));
+                                          //   Todate=CustomDatePicker.formatDate(date,CustomDatePicker.CommitFormat);
+                                             vm_party.setTodate(CustomDatePicker.formatDate(date,CustomDatePicker.CommitFormat));
                                         }
                                     });
                 } catch (ParseException e) {
@@ -210,7 +200,7 @@ public class PartyActivity extends AppCompatActivity implements SearchView.OnQue
             }
         });
 
-
+/*
         Lmissedtype.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -219,42 +209,58 @@ public class PartyActivity extends AppCompatActivity implements SearchView.OnQue
                 Intent intent1 = new Intent(PartyActivity.this, PartyActivity.class);
                 startActivityForResult(intent1, 0);
             }
-        });
+        });*/
 
-        ViewBy="F";
+       // ViewBy="F";
+        vm_party.setViewBy("F");
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
                 int selectedId = radioGroup.getCheckedRadioButtonId();
                 if (selectedId == R.id.entrydate) {
-                    ViewBy="N";
+                  //  ViewBy="N";
+                    vm_party.setViewBy("N");
                 } else {
-                    ViewBy="F";
+                  //  ViewBy="F";
+                    vm_party.setViewBy("F");
                 }
             }
         });
 
-        /*if (PartyTxt.getText().toString().equals("")) {
-            hideOption(R.id.add_remark);
-        }
-        */
+
         setupRecyclerView();
-     //   GetclientDetail();
-
-
-
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        if (mAdapter != null)
+            SelectedPaid = mAdapter.SelectedPaid;
         GetAllParty();
 
     }
 
     private void GetAllParty( ) {
 
-        HashMap<String, String> request = new HashMap<>();
+        vm_party.GetAllParty(context, new Vm_Party.OnResultlistener() {
+            @Override
+            public void SucessResult(ArrayList<mParty> mParties) {
+                mAdapter = new Partyviewapdater(context, mParties,SelectedPaid);
+                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+                recyclerView.setLayoutManager(mLayoutManager);
+                recyclerView.setItemAnimator(new DefaultItemAnimator());
+                recyclerView.setAdapter(mAdapter);
+                TotalParty.setText(""+mAdapter.getItemCount());
+            }
+
+            @Override
+            public void ErrorResult(String Error, String Title) {
+
+            }
+        });
+
+
+       /* HashMap<String, String> request = new HashMap<>();
         request.put("sDbName", shareclass.getValue(context, "company_code", "demo"));
         request.put("iUserId", "140");
         request.put("iStatus", ""+status.getValue());
@@ -269,7 +275,7 @@ public class PartyActivity extends AppCompatActivity implements SearchView.OnQue
                             @Override
                             public void onComplete(Bundle message) {
                                 //parser2(message);
-                                mAdapter = new Partyviewapdater(context, parytdata);
+                                mAdapter = new Partyviewapdater(context, parytdata,SelectedPaid);
                                 RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
                                 recyclerView.setLayoutManager(mLayoutManager);
                                 recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -286,16 +292,15 @@ public class PartyActivity extends AppCompatActivity implements SearchView.OnQue
                         })
                 );
 
-
+*/
 
     }
 
 
 
-    private void parser2(Bundle result) {
+  /*  private void parser2(Bundle result) {
         {
-
-                try {
+            try {
 
 
                     String table0 = result.getString("Tables0");
@@ -303,9 +308,23 @@ public class PartyActivity extends AppCompatActivity implements SearchView.OnQue
                     parytdata.clear();
                     for (int i = 0; i < jsonArray1.length(); i++) {
                         JSONObject c = jsonArray1.getJSONObject(i);
-                        parytdata.add(   rptModel = new mParty(c.getString("PA_ID"),c.getString("PA_NAME"),c.getString("MOBILE"),c.getString("PERSON"),c.getString("STATUS")));
-                    }
 
+
+                        rptModel= new mParty();
+
+                        Paid= c.getString("PA_ID");
+                        rptModel.setId(Paid);
+                        String name=c.getString("PA_NAME");
+                        rptModel.setName(name);
+                        String Mobile=c.getString("MOBILE");
+                        rptModel.setMobile(Mobile);
+                        String Person=c.getString("PERSON");
+                        rptModel.setPerson(Person);
+                        String Status=c.getString("STATUS");
+                        rptModel.setStatus(Status);
+                        parytdata.add(rptModel);
+
+                    }
 
 
                 } catch (Exception e) {
@@ -314,7 +333,7 @@ public class PartyActivity extends AppCompatActivity implements SearchView.OnQue
             }
 
 
-    }
+    }*/
 
     private void setupRecyclerView() {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
@@ -387,18 +406,23 @@ public class PartyActivity extends AppCompatActivity implements SearchView.OnQue
         switch (id) {
             case R.id.all:
                 status=Status.All;
+                 vm_party.setStatusvalue("0");
                 GetAllParty();
                 break;
             case R.id.done:
                 status=Status.Done;
+                vm_party.setStatusvalue("1");
+
                 GetAllParty();
                 break;
             case R.id.inProcess:
                 status=Status.inProcess;
+                vm_party.setStatusvalue("2");
                 GetAllParty();
                 break;
             case R.id.notInterested:
                 status=Status.NotInterested;
+                vm_party.setStatusvalue("3");
                 GetAllParty();
 
                 break;

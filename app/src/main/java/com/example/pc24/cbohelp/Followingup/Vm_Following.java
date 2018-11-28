@@ -90,11 +90,9 @@ public class Vm_Following extends ViewModel {
     public void NextFollowupDialog(final Context context){
 
         Bundle bundle = new Bundle();
-
-
         bundle.putString("iId","0");
         bundle.putInt("iSrno", NEXTFOLLOWUP);
-        bundle.putString("iPaId", getParty().getId());
+        bundle.putString("iPaid", getParty().getId());
         bundle.putString("header",getParty().getName());
         bundle.putString("sContactPerson",getParty().getPerson());
         bundle.putString("sContactNo",getParty().getMobile());
@@ -173,9 +171,6 @@ public class Vm_Following extends ViewModel {
         request.put("sFDATE", getFromDate() );
         request.put("sTDATE", getToDate());
         request.put("sDOC_TYPE",getViewby());
-
-
-
         ArrayList<Integer> tables = new ArrayList<>();
         tables.add(0);
         tables.add(1);
@@ -187,7 +182,6 @@ public class Vm_Following extends ViewModel {
                         .setTables(tables).setResponse(new CBOServices.APIResponse() {
                             @Override
                             public void onComplete(Bundle message) {
-                                //parser2(message);
                                 resultlistner.Sucessresult(followupdata);
                             }
 
@@ -212,11 +206,7 @@ public class Vm_Following extends ViewModel {
                 progress1.dismiss();
 
             } else {
-
-
                 try {
-
-
                     String table0 = result.getString("Tables0");
                     JSONArray jsonArray1 = new JSONArray(table0);
                     followupdata.clear();
@@ -239,6 +229,8 @@ public class Vm_Following extends ViewModel {
                         String refrby = c.getString("REF_BY");
                         mFollow.setrEFBY(refrby);
                         String followdate = c.getString("FOLLOWUPDATE");
+                       // mFollow.setfOLLOWUPDATE(followdate);
+
 
                         mFollow.setfOLLOWUPDATE( followdate.substring(0,followdate.indexOf(" ")));
 
@@ -247,7 +239,10 @@ public class Vm_Following extends ViewModel {
                         String user = c.getString("USER_NAME");
                         mFollow.setuSERNAME(convert(user));
                         String nxtfollow = c.getString("NEXTFOLLOWUPDATE");
-                        mFollow.setnEXTFOLLOWUPDATE(nxtfollow.substring(0,nxtfollow.indexOf(" ")));
+                        //mFollow.setnEXTFOLLOWUPDATE(nxtfollow);
+                       mFollow.setnEXTFOLLOWUPDATE(nxtfollow.substring(0,nxtfollow.indexOf(" ")));
+
+
                         String contactPerson = c.getString("CONTACT_PERSON");
                         mFollow.setcONTACTPERSON(convert(contactPerson));
                         String freamrk = c.getString("FREMARK");mFollow.setfREMARK(freamrk);

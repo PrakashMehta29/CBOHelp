@@ -200,6 +200,7 @@ public class mFollowupgrid {
     }
 
     public String getnEXTFOLLOWUPDATE() {
+
         return nEXTFOLLOWUPDATE;
     }
 

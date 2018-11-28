@@ -3,6 +3,7 @@ package com.example.pc24.cbohelp.PartyView;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,10 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.example.pc24.cbohelp.FollowUp.VM_Followup;
 import com.example.pc24.cbohelp.AddParty.PartyDetail;
+import com.example.pc24.cbohelp.Followingup.NewPartyActivity;
 import com.example.pc24.cbohelp.R;
 import com.example.pc24.cbohelp.appPreferences.Shareclass;
 
@@ -28,10 +31,7 @@ public class Partyviewapdater extends RecyclerView.Adapter<Partyviewapdater.MyVi
     Context context;
     VM_Followup vm_followup = null;
     Shareclass shareclass = null;
-    private static final int FOLLOWUP_DIALOG = 7;
-    VM_Followup.OnResulyListner resulyListner = null;
-    public String Paid = "";
-    mParty mParty;
+    String SelectedPaid;
 
 
 
@@ -42,21 +42,23 @@ public class Partyviewapdater extends RecyclerView.Adapter<Partyviewapdater.MyVi
         ImageView Edit, delete;
         LinearLayout   continer;
 
+
         public MyViewHolder(View view) {
             super(view);
-            title = (TextView) view.findViewById(R.id.title);
-            year = (TextView) view.findViewById(R.id.year);
-            person = (TextView) view.findViewById(R.id.person);
-            Edit = (ImageView) view.findViewById(R.id.Editparty);
-            continer=(LinearLayout)view.findViewById(R.id.container);
+            title =  view.findViewById(R.id.title);
+            year =  view.findViewById(R.id.year);
+            person =  view.findViewById(R.id.person);
+            Edit =  view.findViewById(R.id.Editparty);
+            continer=view.findViewById(R.id.container);
         }
 
 
     }
 
-    public Partyviewapdater(Context mContext, ArrayList<mParty> data) {
+    public Partyviewapdater(Context mContext, ArrayList<mParty> data, String SelectedPaid) {
         this.context = mContext;
         this.partydata = data;
+        this.SelectedPaid = SelectedPaid;
         partydatacopy = (ArrayList<mParty>) data.clone();
     }
 
@@ -70,14 +72,9 @@ public class Partyviewapdater extends RecyclerView.Adapter<Partyviewapdater.MyVi
     }
 
     @Override
-    public void onBindViewHolder(final MyViewHolder holder, int position) {
+    public void onBindViewHolder(final MyViewHolder holder, final int position) {
         if (holder instanceof MyViewHolder) {
-            MyViewHolder holder1 = (MyViewHolder) holder;
             final mParty rptmodel = partydatacopy.get(position);
-            //set values of data here
-         //   final mParty mParty = partydata.get(position);
-
-            //String Login_user = shareclass.getValue(context,"PA_ID","0");
 
             holder.title.setText(rptmodel.getName());
 
@@ -88,36 +85,22 @@ public class Partyviewapdater extends RecyclerView.Adapter<Partyviewapdater.MyVi
             holder.continer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //   GetFollowup();
                     Context context = view.getContext();
-                   /* Bundle bundle=new Bundle();
-                    bundle.putString("Paid",rptmodel.getId());
-                    bundle.putString("Mobile",rptmodel.getMobile());
-                    bundle.putString("Name",  rptmodel.getName());
-                    bundle.putString("Person",rptmodel.getPerson());
-                    bundle.putString("Status",rptmodel.getStatus());*/
-                    /*shareclass=new Shareclass();
-                    shareclass.save(context,"Paid",mParty.getId());
-                    shareclass.save(context,"Mobile",mParty.getMobile());
-                    shareclass.save(context,"Name",  mParty.getName());
-                    shareclass.save(context,"Person",mParty.getPerson());
-                    shareclass.save(context,"Status",mParty.getStatus());*/
+                    SelectedPaid = rptmodel.getId();
 
 
-                  /*  Intent intent = new Intent(context, NewPartyActivity.class);
-
-
-                    //intent.putExtras(bundle);
-                    context.startActivity(intent);*/
-                    Intent i=new Intent();
+                    Intent i = new Intent(context, NewPartyActivity.class);
                     i.putExtra("Paid",rptmodel.getId());
                     i.putExtra("Mobile",rptmodel.getMobile());
                     i.putExtra("Name",  rptmodel.getName());
                     i.putExtra("Person",rptmodel.getPerson());
                     i.putExtra("Status",rptmodel.getStatus());
-                    ((Activity) context).setResult(RESULT_OK, i);
-                    ((Activity) context).finish();
+                    i.putExtras(i);
+                    context.startActivity(i);
 
+//                    ((Activity) context).setResult(RESULT_OK, i);
+//                    ((Activity) context).finish();
+                    notifyDataSetChanged();
                 }
 
             });
@@ -136,6 +119,12 @@ public class Partyviewapdater extends RecyclerView.Adapter<Partyviewapdater.MyVi
                     ((Activity) context).finish();*/
                 }
             });
+
+            if(SelectedPaid.equals(rptmodel.getId())){
+                holder.continer.setBackgroundColor(Color.parseColor(context.getString(R.string.SelectedValue)));
+            } else {
+                holder.continer.setBackgroundColor(Color.parseColor(context.getString(R.string.DeafultValue)));
+            }
         }
 
 
