@@ -11,6 +11,10 @@ public class SampleClass {
 
 
     123456
+    hj
+            nbv
 
-
+    public hj getNbv() {
+        return nbv;
+    }
 }
