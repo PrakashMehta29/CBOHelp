@@ -64,11 +64,6 @@ public class PartyDetail extends AppCompatActivity {
     private  static final int FOLLOWUP_DIALOG=7;
     Bundle bundle;
     String  PAID="";
-
-    //idpassword
-/*1554hari
-    1554
-    */
     String Componeytype = "";
     mParty mParty = null;
     mPartyField mfield;
@@ -139,7 +134,7 @@ public class PartyDetail extends AppCompatActivity {
         ComponeyType.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new Spinner_Dialog(PartyDetail.this, componeydataCopy, new Spinner_Dialog.OnItemClickListener() {
+                new Spinner_Dialog(PartyDetail.this, componeydata, new Spinner_Dialog.OnItemClickListener() {
 
                     @Override
                     public void ItemSelected(DropDownModel item) {
@@ -158,7 +153,7 @@ public class PartyDetail extends AppCompatActivity {
         CompspinImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new Spinner_Dialog(PartyDetail.this, componeydataCopy, new Spinner_Dialog.OnItemClickListener() {
+                new Spinner_Dialog(PartyDetail.this, componeydata, new Spinner_Dialog.OnItemClickListener() {
 
                     @Override
                     public void ItemSelected(DropDownModel item) {
@@ -176,7 +171,7 @@ public class PartyDetail extends AppCompatActivity {
         User.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new Spinner_Dialog(PartyDetail.this, UserDataCopy, new Spinner_Dialog.OnItemClickListener() {
+                new Spinner_Dialog(PartyDetail.this, UserData, new Spinner_Dialog.OnItemClickListener() {
 
                     @Override
                     public void ItemSelected(DropDownModel item) {
@@ -194,7 +189,7 @@ public class PartyDetail extends AppCompatActivity {
         User1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new Spinner_Dialog(PartyDetail.this, UserDataCopy, new Spinner_Dialog.OnItemClickListener() {
+                new Spinner_Dialog(PartyDetail.this, UserData1, new Spinner_Dialog.OnItemClickListener() {
 
                     @Override
                     public void ItemSelected(DropDownModel item) {
@@ -212,7 +207,7 @@ public class PartyDetail extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                new Spinner_Dialog(PartyDetail.this, UserDataCopy, new Spinner_Dialog.OnItemClickListener() {
+                new Spinner_Dialog(PartyDetail.this, UserData, new Spinner_Dialog.OnItemClickListener() {
 
                     @Override
                     public void ItemSelected(DropDownModel item) {
@@ -232,7 +227,7 @@ public class PartyDetail extends AppCompatActivity {
         User1SpinImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new Spinner_Dialog(PartyDetail.this, UserDataCopy, new Spinner_Dialog.OnItemClickListener() {
+                new Spinner_Dialog(PartyDetail.this, UserData1, new Spinner_Dialog.OnItemClickListener() {
 
                     @Override
                     public void ItemSelected(DropDownModel item) {
@@ -284,7 +279,7 @@ public class PartyDetail extends AppCompatActivity {
                             @Override
                             public void onComplete(Bundle message) {
                                 componeydataCopy.addAll(componeydata);
-                                UserDataCopy.addAll(UserData);
+                                UserData1.addAll(UserData);
                                 ComponeyType.setText(ComponeyName);
                                 UserData1.addAll(UserData);
                                 User.setText(userName);
@@ -705,6 +700,7 @@ public class PartyDetail extends AppCompatActivity {
                     JSONObject c = jsonArray2.getJSONObject(i);
                     UserData.add(new DropDownModel(c.getString("USER_NAME"), c.getString("ID")));
                 }
+                UserData.addAll(UserData1);
                // UserDataCopy.addAll(UserData);
                // UserData1.addAll(UserData);
                 if (UserData.size() != 1) {
@@ -896,18 +892,10 @@ public class PartyDetail extends AppCompatActivity {
             }
         }
             for (int j = 0; j < UserData1.size(); j++) {
-
-                //userId = String.valueOf(UserData.get(i).getId().equals(USERID));
                 if (UserData1.get(j).getId().equals(USERID1)) {
-                  /*  userId = UserData.get(j).getId();
-                    userName = UserData.get(j).getName();
-                    User.setText(userName);
-                    User.setPadding(1, 0, 5, 0);*/
                     userId1 = UserData1.get(j).getId();
                     userName1 = UserData1.get(j).getName();
                     User1.setText(userName1);
-                    User1.setPadding(1, 0, 5, 0);
-
                     User1.setPadding(1, 0, 5, 0);
 
                 }
