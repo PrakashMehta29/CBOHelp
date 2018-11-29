@@ -90,7 +90,7 @@ public class Vm_Party extends ViewModel{
       request.put("iStatus", ""+ getStatusvalue());
       request.put("sFDATE",getFadte() );
       request.put("sTDATE", getTodate());
-      request.put("sDOC_TYPE",ViewBy);
+      request.put("sDOC_TYPE",getViewBy());
 
 
       new MyAPIService(context)
