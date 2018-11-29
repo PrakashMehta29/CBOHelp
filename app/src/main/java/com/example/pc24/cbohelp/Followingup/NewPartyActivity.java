@@ -236,12 +236,13 @@ public class NewPartyActivity extends AppCompatActivity implements SearchView.On
         vm_following.GETFOLLOWCALL(context, new Vm_Following.OnResultlistner() {
             @Override
             public void Sucessresult(ArrayList<mFollowupgrid> mFollowupgrids) {
-
                 mAdapter = new NewPartyActvityAdapter(context, mFollowupgrids);
+
                 RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
                 recyclerView.setLayoutManager(mLayoutManager);
                 recyclerView.setItemAnimator(new DefaultItemAnimator());
                 recyclerView.setAdapter(mAdapter);
+
                 ViewCompat.setNestedScrollingEnabled(
                         recyclerView, false);
 

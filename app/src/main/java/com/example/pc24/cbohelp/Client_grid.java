@@ -101,13 +101,8 @@ public class Client_grid extends AppCompatActivity implements SearchView.OnQuery
                 Alert_title.setText("LOGIN !!!");
                 Alert_message.setText("Please Login and then continue..");
                 Alert_message_list.setVisibility(View.GONE);
-
-
                 AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
-
-
                 final AlertDialog dialog = builder1.create();
-
                 dialog.setView(dialogLayout);
                 Alert_Positive.setOnClickListener(new View.OnClickListener() {
                     @Override

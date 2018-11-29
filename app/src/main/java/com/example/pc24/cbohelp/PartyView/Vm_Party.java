@@ -27,6 +27,8 @@ public class Vm_Party extends ViewModel{
     String Todate="";
     String statusvalue ="";
 
+
+
     public String getViewBy() {
         return ViewBy;
     }
@@ -84,7 +86,7 @@ public class Vm_Party extends ViewModel{
 
       HashMap<String, String> request = new HashMap<>();
       request.put("sDbName", shareclass.getValue(context, "company_code", "demo"));
-      request.put("iUserId", "140");
+      request.put("iUserId", shareclass.getValue(context,"PA_ID","0"));
       request.put("iStatus", ""+ getStatusvalue());
       request.put("sFDATE",getFadte() );
       request.put("sTDATE", getTodate());
