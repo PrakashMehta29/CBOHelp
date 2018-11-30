@@ -212,17 +212,17 @@ public class PartyActivity extends AppCompatActivity implements SearchView.OnQue
         });*/
 
        // ViewBy="F";
-        vm_party.setViewBy("F");
+        vm_party.setViewBy("N");
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
                 int selectedId = radioGroup.getCheckedRadioButtonId();
                 if (selectedId == R.id.entrydate) {
                   //  ViewBy="N";
-                    vm_party.setViewBy("N");
+                    vm_party.setViewBy("F");
                 } else {
                   //  ViewBy="F";
-                    vm_party.setViewBy("F");
+                    vm_party.setViewBy("N");
                 }
             }
         });
