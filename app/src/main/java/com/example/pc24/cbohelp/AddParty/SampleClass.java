@@ -1,3 +1,4 @@
+/*
 package com.example.pc24.cbohelp.AddParty;
 
 public class SampleClass {
@@ -7,10 +8,15 @@ public class SampleClass {
     dfg
     fgfh
 
-    hdjdj
+            hdjdj
 
 
     123456
-            852
+    hj
+            nbv
 
+    public hj getNbv() {
+        return nbv;
+    }
 }
+*/
