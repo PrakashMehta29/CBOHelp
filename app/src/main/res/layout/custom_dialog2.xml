@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    android:orientation="vertical"
+
+    >
+
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:layout_margin="20dp"
+        android:background="@drawable/dialog_background"
+        >
+
+
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:orientation="vertical"
+
+                    >
+
+                    <TextView
+                        android:id="@+id/title"
+                        android:layout_width="match_parent"
+                        android:layout_height="fill_parent"
+                        android:gravity="center"
+                        android:text="Party Name"
+
+                        android:textStyle="bold"
+                        android:background="@color/colorPrimaryDark"
+                        android:textColor="#fff"
+                        android:textSize="16dp" />
+
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/colorPrimaryDark"
+                        />
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Are you Sure Want to call this Number ?"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="17dp"/>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/numberlist"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                    />
+
+
+
+
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:orientation="horizontal"
+                    android:layout_gravity="bottom"
+                    android:layout_margin="5dp"
+                    android:weightSum="2"
+                    >
+                    <Button
+                        android:layout_width="fill_parent"
+                        android:layout_height="40dp"
+                        android:background="@drawable/button_back_dark_2016"
+                        android:id="@+id/ok"
+                        android:layout_weight="1"
+                        android:text="Ok"
+                        android:textStyle="bold"
+                        android:layout_gravity="bottom"
+                        android:textColor="#fff"
+                        android:textAllCaps="false"
+                        android:layout_marginRight="5dp"
+                        />
+
+                    <Button
+                        android:layout_width="fill_parent"
+                        android:layout_height="40dp"
+                        android:background="@drawable/button_back_dark_2016"
+                        android:id="@+id/cancel"
+                        android:layout_weight="1"
+                        android:text="Cancel"
+
+                        android:layout_gravity="bottom"
+                        android:layout_marginLeft="5dp"
+                        android:textStyle="bold"
+                        android:textColor="#fff"
+                        android:textAllCaps="false"
+                        />
+
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+    </LinearLayout>
+
+
+
+
+</LinearLayout>

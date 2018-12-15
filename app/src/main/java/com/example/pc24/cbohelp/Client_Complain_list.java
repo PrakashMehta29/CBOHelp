@@ -85,6 +85,7 @@ import java.util.List;
 
 public class Client_Complain_list extends AppCompatActivity implements SearchView.OnQueryTextListener,SwipeRefreshLayout.OnRefreshListener,up_down_ftp.AdapterCallback{
 
+
     public ProgressDialog progress1;
     private  static final int MESSAGE_INTERNET=1,MESSAGE_INTERNET_COMPLAIN_COMIT=3;
     private  static final int MESSAGE_INTERNET_main=2;
@@ -149,9 +150,8 @@ public class Client_Complain_list extends AppCompatActivity implements SearchVie
         who=intent.getStringExtra("who");
         show_report=intent.getStringExtra("show_report");
         updated_complain=intent.getStringExtra("DOC_NO");
-
         getSupportActionBar().setTitle(name);
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         shareclass=new Shareclass();
         customVariablesAndMethod=Custom_Variables_And_Method.getInstance();
         context=this;
@@ -401,11 +401,14 @@ public class Client_Complain_list extends AppCompatActivity implements SearchVie
             case R.id.user_view:
                 Intent intent1=new Intent(Client_Complain_list.this, Admin_view.class);
                 intent1.putExtra("View","U");
+                intent1.putExtra("title","User View");
+
                 startActivity(intent1);
                 break;
             case R.id.party_view:
                 Intent intent2=new Intent(Client_Complain_list.this, Admin_view.class);
                 intent2.putExtra("View","P");
+                intent2.putExtra("title","Party View");
                 startActivity(intent2);
                 break;
             case R.id.general_view:
@@ -414,12 +417,12 @@ public class Client_Complain_list extends AppCompatActivity implements SearchVie
             case R.id.filter:
                 Show_filter();
                 break;
-            case R.id.party_status:
+         /*   case R.id.party_status:
                 Intent intent3=new Intent(Client_Complain_list.this, PartyActivity.class);
 
                 startActivity(intent3);
 
-                break;
+                break;*/
 
 
 
@@ -1446,4 +1449,10 @@ public class Client_Complain_list extends AppCompatActivity implements SearchVie
         getdata(LastReport);
         //adaptor_data.clear();
     }
+   /* @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent=new Intent(Client_Complain_list.this,Dashboard.class);
+        startActivity(intent);
+    }*/
 }

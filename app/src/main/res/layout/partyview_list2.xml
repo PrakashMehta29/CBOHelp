@@ -5,13 +5,10 @@
     android:id="@+id/card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-
     card_view:cardCornerRadius="4dp"
     android:foreground="?android:attr/selectableItemBackground"
     card_view:cardBackgroundColor="@android:color/white"
     card_view:cardElevation="2dp"
-
-
     card_view:cardUseCompatPadding="false">
 
 
@@ -82,17 +79,11 @@
                         android:id="@+id/person"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-
                         android:layout_weight="3"
                         android:gravity="left"
                         android:textColor="#000"
                         android:text="Mail From: "
                         android:textSize="14sp" />
-
-
-
-
-
 
                     <ImageView
                         android:id="@+id/Editparty"
@@ -130,7 +121,7 @@
 
 
                 <TextView
-                    android:id="@+id/complain_transfer"
+                    android:id="@+id/user"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:hint="Javed ---> Arvind"
@@ -177,15 +168,33 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginBottom="2dp"
-                    android:visibility="gone">
+                    android:layout_gravity="left"
+                  >
+
+
+
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="wrap_content"                                                             android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:textStyle="bold"
+                        android:visibility="gone"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:text="Last Remark :"
+                        android:textSize="14sp" />
+                    <TextView
+                        android:id="@+id/Lremark"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Describtion"
-                        android:lines="1"
-                        android:id="@+id/describtion"/>
+                        android:layout_weight="3"
+                        android:gravity="left"
+                        android:textColor="#8c8c8c"
+                        android:text="Mail From: "
+                        android:textSize="14sp" />
+
+
+
+
+
                 </LinearLayout>
 
             </LinearLayout>

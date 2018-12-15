@@ -21,13 +21,19 @@ import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import com.example.pc24.cbohelp.AddParty.Isubmit;
+import com.example.pc24.cbohelp.AddParty.PartyDetail2;
+import com.example.pc24.cbohelp.AddParty.mPartyField;
+import com.example.pc24.cbohelp.FollowUp.FollowupDialog;
 import com.example.pc24.cbohelp.FollowUp.VM_Followup;
 import com.example.pc24.cbohelp.AddParty.PartyDetail;
 import com.example.pc24.cbohelp.Followingup.NewPartyActivity;
 import com.example.pc24.cbohelp.R;
 import com.example.pc24.cbohelp.appPreferences.Shareclass;
+import com.example.pc24.cbohelp.utils.DropDownModel;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 import static android.app.Activity.RESULT_OK;
@@ -40,10 +46,15 @@ public class Partyviewapdater extends RecyclerView.Adapter<Partyviewapdater.MyVi
     VM_Followup vm_followup = null;
     Shareclass shareclass = null;
     String SelectedPaid;
+    public  static  final  int  CALLDIALOG=2;
+    mPartyContact mPartyContact=null;
+    ArrayList<mPartyContact> partyContacts = new ArrayList<>();
+    Isubmit isubmit;
+
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView title, year, genre, person, Mobile, cir;
+        public TextView title, year, genre, person, Mobile, cir,Lremark,User;
 
         ImageView Edit, delete;
         LinearLayout continer;
@@ -58,6 +69,8 @@ public class Partyviewapdater extends RecyclerView.Adapter<Partyviewapdater.MyVi
             continer = view.findViewById(R.id.container);
             Mobile = view.findViewById(R.id.mobile);
             cir = view.findViewById(R.id.PartyHeader);
+            Lremark=view.findViewById(R.id.Lremark);
+            User=view.findViewById(R.id.user);
         }
 
 
@@ -83,12 +96,21 @@ public class Partyviewapdater extends RecyclerView.Adapter<Partyviewapdater.MyVi
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
         if (holder instanceof MyViewHolder) {
             final mParty rptmodel = partydatacopy.get(position);
-
             holder.title.setText(rptmodel.getName());
             holder.year.setText(rptmodel.getStatus());
             holder.person.setText(rptmodel.getPerson());
             holder.Mobile.setText(rptmodel.getMobile());
+            holder.Lremark.setText(rptmodel.getLastremark());
             holder.cir.setText(rptmodel.getName().substring(0, 1).toUpperCase());
+
+            if (rptmodel.getUser().equals("") && rptmodel.getUser1().equals("")){
+                holder.User.setVisibility(View.GONE);
+            }else{
+                holder.User.setText(rptmodel.getUser()+" ----> "+rptmodel.getUser1());
+                holder.User.setVisibility(View.VISIBLE);
+            }
+
+
             final Drawable drawable = holder.cir.getBackground();
             Random rnd = new Random();
             final int[] color = {Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256))};
@@ -113,25 +135,15 @@ public class Partyviewapdater extends RecyclerView.Adapter<Partyviewapdater.MyVi
                 drawable.setColorFilter(color[0], PorterDuff.Mode.SRC_IN);
 
             }
+
             holder.Mobile.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    final Context context = view.getContext();
 
+                        mPartyContact=new mPartyContact(context,rptmodel.getMobile(),rptmodel.getName());
+                        new CallDialog(context,false,mPartyContact,CALLDIALOG).show();
 
-                    Intent intent = new Intent(Intent.ACTION_CALL);
-
-                    intent.setData(Uri.parse("tel:" + rptmodel.getMobile().toString()));
-                    if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                        // TODO: Consider calling
-                        //    ActivityCompat#requestPermissions
-                        // here to request the missing permissions, and then overriding
-                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                        //                                          int[] grantResults)
-                        // to handle the case where the user grants the permission. See the documentation
-                        // for ActivityCompat#requestPermissions for more details.
-                        return;
-                    }
-                    context.startActivity(intent);
                 }
             });
             holder.continer.setOnClickListener(new View.OnClickListener() {
@@ -157,55 +169,37 @@ public class Partyviewapdater extends RecyclerView.Adapter<Partyviewapdater.MyVi
             holder.Edit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Context context = view.getContext();
+                    final Context context = view.getContext();
 
-                    Intent intent = new Intent(context, PartyDetail.class);
-                    Bundle bundle=new Bundle();
+                    final Intent intent = new Intent(context, PartyDetail2.class);
+                     Bundle bundle=new Bundle();
                     bundle.putString("Paid",rptmodel.getId());
-                    intent.putExtras(bundle);
+                    intent .putExtras(bundle);
                     context.startActivity(intent);
 
-                  /*  ((Activity) context).setResult(1, intent);
+
+
+
+
+
+                 /* ((Activity) context).setResult(1, intent);
                     ((Activity) context).finish();*/
+
+                    notifyDataSetChanged();
                 }
             });
 
             if(SelectedPaid.equals(rptmodel.getId())){
                 holder.continer.setBackgroundColor(Color.parseColor(context.getString(R.string.SelectedValue)));
+                holder.Lremark.setTextColor(Color.parseColor("#ffffff"));
             } else {
                 holder.continer.setBackgroundColor(Color.parseColor(context.getString(R.string.DeafultValue)));
             }
         }
 
 
-      /*  holder.followbtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final Context context = view.getContext();
-                Bundle bundle = new Bundle();
-                bundle.putString("iId","0");
-                bundle.putInt("iSrno", bundle.getInt("iSrno",0));
-                bundle.putString("iPaId",mParty.getId());
-                bundle.putString("header",mParty.getName());
-                bundle.putString("sContactPerson",mParty.getPerson());
-                bundle.putString("sContactNo",mParty.getMobile());
-                bundle.putString("iUserId",mParty.getId());
 
 
-
-
-                new FollowupDialog(context, bundle, FOLLOWUP_DIALOG, new FollowupDialog.IFollowupDialog() {
-                    @Override
-                    public void onFollowSubmit() {
-
-                        holder.viewbrtn.performClick();
-
-                    }
-                }).show();
-
-
-            }
-        });*/
     }
 
 

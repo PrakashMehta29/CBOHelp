@@ -73,7 +73,7 @@ public class VM_Followup extends ViewModel  {
 
 
 
-        new FollowupDialog(context, bundle, FOLLOWUP_DIALOG, new FollowupDialog.IFollowupDialog() {
+        new FollowupDialog(context, bundle, FOLLOWUP_DIALOG,true,true, new FollowupDialog.IFollowupDialog() {
             @Override
             public void onFollowSubmit() {
 

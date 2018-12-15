@@ -29,7 +29,7 @@ public class Splash extends AppCompatActivity {
                 if (shareclass.getValue(Splash.this,"PA_ID","0").equals("0")){
                     startActivity(new Intent(Splash.this,Login.class));
                 }else {
-                    Intent intent = new Intent(Splash.this, Client_Complain_list.class);
+                    Intent intent = new Intent(Splash.this, Dashboard.class);
                     intent.putExtra("pa_id", "");
                     intent.putExtra("name","ALL");
                     intent.putExtra("s1", "");

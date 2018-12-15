@@ -43,7 +43,6 @@ public class Admin_view extends AppCompatActivity implements SearchView.OnQueryT
     ArrayList<HashMap<String,String>> adaptor_data;
     ArrayList<String> name,amt,id,hq;
     Shareclass shareclass;
-    String what_to_do;
     DBHelper dbHelper;
     SearchView searchView;
     MenuItem searchMenuItem;
@@ -70,13 +69,14 @@ public class Admin_view extends AppCompatActivity implements SearchView.OnQueryT
         dbHelper=new DBHelper(this);
         context=this;
 
-        if (getSupportActionBar() != null){
+       /* if (getSupportActionBar() != null){
 
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            String name=shareclass.getValue(this,"PA_NAME","0");
+            getSupportActionBar().setTitle( name);
         }
-
+*/
         Intent intent=getIntent();
-        what_to_do=intent.getStringExtra("what_to_do");
         getSupportActionBar().setTitle(intent.getStringExtra("title"));
 
         team_list=dbHelper.getTeam("");
@@ -148,10 +148,10 @@ public class Admin_view extends AppCompatActivity implements SearchView.OnQueryT
 
     private void getdata(Boolean sync){
 
-        if (Login_user.equals(shareclass.getValue(context,"PA_ID","0"))) {
+        if (getIntent().getStringExtra("View").equalsIgnoreCase("P")) {
             adaptor_data = dbHelper.getParty(LastReport,"");
         }else {
-            adaptor_data = dbHelper.getParty(LastReport,Login_user);
+            adaptor_data = dbHelper.getParty(LastReport,"");
         }
 
         new_order_adaptor=new Client_order_Adaptor(this,adaptor_data,"A");

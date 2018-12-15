@@ -68,11 +68,9 @@ public class Vm_Following extends ViewModel {
         Viewby = viewby;
     }
 
-    String FromDate ="";
+     String FromDate ="";
      String ToDate ="";
      String Viewby="";
-
-
 
 
     public mParty getParty() {
@@ -88,7 +86,6 @@ public class Vm_Following extends ViewModel {
     }
 
     public void NextFollowupDialog(final Context context){
-
         Bundle bundle = new Bundle();
         bundle.putString("iId","0");
         bundle.putInt("iSrno", NEXTFOLLOWUP);
@@ -101,7 +98,7 @@ public class Vm_Following extends ViewModel {
 
 
 
-        new FollowupDialog(context, bundle, FOLLOWUP_DIALOG, new FollowupDialog.IFollowupDialog() {
+        new FollowupDialog(context, bundle, FOLLOWUP_DIALOG,true,true, new FollowupDialog.IFollowupDialog() {
             @Override
             public void onFollowSubmit() {
 
@@ -137,12 +134,6 @@ public class Vm_Following extends ViewModel {
 
 
     }
-  public  void OnNameSelected(Context context){
-
-
-
-
-  }
     public void GETFOLLOWCALL(Context context, OnResultlistner resultlistner){
 
 

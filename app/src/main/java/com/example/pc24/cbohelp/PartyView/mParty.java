@@ -4,7 +4,17 @@ package com.example.pc24.cbohelp.PartyView;
 import android.content.Context;
 
 public class mParty {
-  private  String id,Name,mobile,person,status,viewBy,FromDate,Todate;
+  private  String id;
+    private String Name;
+    private String mobile;
+    private String person;
+    private String status;
+    private String User;
+    private String User1;
+
+
+
+    private String Lastremark;
 Context context;
 
     public mParty() {
@@ -15,6 +25,21 @@ Context context;
        this. Name = name;
     }
 
+    public String getUser() {
+        return User;
+    }
+
+    public void setUser(String user) {
+        User = user;
+    }
+
+    public String getUser1() {
+        return User1;
+    }
+
+    public void setUser1(String user1) {
+        User1 = user1;
+    }
 
     public mParty(String Id, String name, String mobile, String person, String status) {
         Name = name;
@@ -23,6 +48,19 @@ Context context;
         this.status = status;
         this.id=Id;
 
+    }
+
+
+
+    public mParty(String Id, String name, String mobile, String person, String status,String Lastremark,String User, String User1) {
+        Name = name;
+        this.mobile = mobile;
+        this.person = person;
+        this.status = status;
+        this.id=Id;
+        this.Lastremark=Lastremark;
+        this.User= User;
+        this.User1=User1;
     }
 
     public String getId() {
@@ -34,7 +72,8 @@ Context context;
     }
 
     public String getName() {
-        return Name;
+
+        return Name.trim();
     }
 
     public void setName(String name) {
@@ -66,6 +105,13 @@ Context context;
     }
 
 
+    public String getLastremark() {
+        return Lastremark;
+    }
+
+    public void setLastremark(String lastremark) {
+        Lastremark = lastremark;
+    }
 
 
 }

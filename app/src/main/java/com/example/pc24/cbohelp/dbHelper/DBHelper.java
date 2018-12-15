@@ -129,7 +129,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
        /* name.add("CBO BI");
         code.add("b");
-        name.add("New Order");
+        name.add("New order");
         code.add("n");*/
         while(!res.isAfterLast()){
             name.add(res.getString(res.getColumnIndex("MENU_NAME")));
@@ -206,7 +206,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     /// CHAT TABLE ENDS HERE
 
-    /// Order Item table starts here
+    /// order Item table starts here
     public boolean insertOrderItem (String ITEM_ID, String ITEM_NAME, String RATE, String MRP_RATE, String PACK) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -259,10 +259,10 @@ public class DBHelper extends SQLiteOpenHelper {
         sd.delete(ORDER_ITEM_TABLE, null, null);
         sd.close();
     }
-    /// Order Item table ends here
+    /// order Item table ends here
 
 
-    /// Order table starts here
+    /// order table starts here
 
 
     public boolean insertComplaint (String COMPLAINT_TYPE,String DOC_NO,String PA_ID, String PA_NAME,
@@ -374,7 +374,7 @@ public class DBHelper extends SQLiteOpenHelper {
         sd.close();
     }
 
-    /// Order table ends here
+    /// order table ends here
 
 
     /// Party table starts here
@@ -484,7 +484,7 @@ public class DBHelper extends SQLiteOpenHelper {
         sd.close();
     }
 
-    /// Order table ends here
+    /// order table ends here
 
 
     /// team table starts here

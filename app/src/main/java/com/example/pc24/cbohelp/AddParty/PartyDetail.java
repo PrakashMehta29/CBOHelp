@@ -2,6 +2,7 @@ package com.example.pc24.cbohelp.AddParty;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +20,8 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.pc24.cbohelp.FollowUp.FollowupDialog;
+import com.example.pc24.cbohelp.Followingup.NewPartyActivity;
+import com.example.pc24.cbohelp.Followingup.Vm_Following;
 import com.example.pc24.cbohelp.PartyView.mParty;
 import com.example.pc24.cbohelp.R;
 import com.example.pc24.cbohelp.Spinner_Dialog;
@@ -40,12 +43,13 @@ import java.util.HashMap;
 
 public class PartyDetail extends AppCompatActivity {
 
-    String[] STATUS = { "Done", "InProcess", "Not Intrested"};
+    private static final int MESSAGE_INTERNET = 1, FollowUpOrder_Commit = 2, ClientPopulate = 3;
+    private static final int FOLLOWUP_DIALOG = 7;
+    public ProgressDialog progress1=null;
+    String[] STATUS = {"Done", "InProcess", "Not Intrested"};
     Button ComponeyType, User, User1;
     Spinner Status;
     Context context;
-    public ProgressDialog progress1;
-    private static final int MESSAGE_INTERNET = 1, FollowUpOrder_Commit = 2, ClientPopulate = 3;
     Shareclass shareclass;
     DBHelper dbHelper;
     String USERID = "", USERNAME = "";
@@ -54,20 +58,27 @@ public class PartyDetail extends AppCompatActivity {
     String userName1 = "", userId1 = "";
     String ComponeyName = "", ComponeyId = "";
     String StatusName = "", StatusId = "";
-    private AlertDialog myalertDialog = null;
     ArrayList<mPartyField> mPartyFields = new ArrayList<mPartyField>();
     ArrayList<DropDownModel> componeydata = new ArrayList<DropDownModel>();
     ArrayList<DropDownModel> componeydataCopy = new ArrayList<DropDownModel>();
     ArrayList<DropDownModel> UserData = new ArrayList<DropDownModel>();
     ArrayList<DropDownModel> UserData1 = new ArrayList<DropDownModel>();
     ArrayList<DropDownModel> UserDataCopy = new ArrayList<DropDownModel>();
-    private  static final int FOLLOWUP_DIALOG=7;
     Bundle bundle;
-    String  PAID="";
+    String PAID = "";
     String Componeytype = "";
     mParty mParty = null;
     mPartyField mfield;
-    String Paid="";
+    String Paid = "";
+    EditText paname, mobile, email, person, city, website, EmplyeeNo, Referby, adress1, adress2, adress3, adress4;
+    Button submit;
+    LinearLayout layoutComponey, layoutUser, layoutuser1;
+    Menu menu;
+    ImageView CompspinImg, UserSpingImg, User1SpinImg, statsuimg;
+
+
+    private AlertDialog myalertDialog = null;
+    private String Party_Id = "0";
 
     public mParty getmParty() {
         return mParty;
@@ -77,49 +88,40 @@ public class PartyDetail extends AppCompatActivity {
         this.mParty = mParty;
     }
 
-
-    EditText paname, mobile, email, person, city, website, EmplyeeNo, Referby, adress1, adress2, adress3, adress4;
-    Button submit;
-    private String Party_Id = "0";
-    LinearLayout layoutComponey, layoutUser, layoutuser1;
-    Menu menu;
-
-    ImageView CompspinImg, UserSpingImg, User1SpinImg, statsuimg;
-
-
+    VM_PartyzDetail vm_partyzDetail=null;
     public void onCreate(Bundle b) {
         super.onCreate(b);
         setContentView(R.layout.party_detail);
-        paname = (EditText) findViewById(R.id.party_name);
-        mobile = (EditText) findViewById(R.id.party_mobile_no);
-        email = (EditText) findViewById(R.id.party_email);
-        person = (EditText) findViewById(R.id.party_person);
-        city = (EditText) findViewById(R.id.party_city);
-        website = (EditText) findViewById(R.id.party_website);
-        EmplyeeNo = (EditText) findViewById(R.id.party_empolyye_no);
-        Referby = (EditText) findViewById(R.id.party_Ref);
-        Status = (Spinner) findViewById(R.id.status_type);
-        statsuimg = (ImageView) findViewById(R.id.spinner_img_status);
-        adress1 = (EditText) findViewById(R.id.party_Adrress1);
-        adress2 = (EditText) findViewById(R.id.party_Adress_2);
-        adress3 = (EditText) findViewById(R.id.party_Adress_3);
-        adress4 = (EditText) findViewById(R.id.party_Adress_4);
-        CompspinImg = (ImageView) findViewById(R.id.spinner_img_componey);
-        UserSpingImg = (ImageView) findViewById(R.id.spinner_img_user);
+        paname = findViewById(R.id.party_name);
+        mobile = findViewById(R.id.party_mobile_no);
+        email = findViewById(R.id.party_email);
+        person = findViewById(R.id.party_person);
+        city = findViewById(R.id.party_city);
+        website = findViewById(R.id.party_website);
+        EmplyeeNo = findViewById(R.id.party_empolyye_no);
+        Referby = findViewById(R.id.party_Ref);
+        Status = findViewById(R.id.status_type);
+        statsuimg = findViewById(R.id.spinner_img_status);
+        adress1 = findViewById(R.id.party_Adrress1);
+        adress2 = findViewById(R.id.party_Adress_2);
+        adress3 = findViewById(R.id.party_Adress_3);
+        adress4 = findViewById(R.id.party_Adress_4);
+        CompspinImg = findViewById(R.id.spinner_img_componey);
+        UserSpingImg = findViewById(R.id.spinner_img_user);
 
-        User1SpinImg = (ImageView) findViewById(R.id.spinner_img_user1);
-        layoutComponey = (LinearLayout) findViewById(R.id.layout_componey_type);
-        layoutUser = (LinearLayout) findViewById(R.id.layout_user);
-        layoutuser1 = (LinearLayout) findViewById(R.id.layout_user1);
-        submit = (Button) findViewById(R.id.show);
-        ComponeyType = (Button) findViewById(R.id.componey_type);
-        User = (Button) findViewById(R.id.party_user);
-        User1 = (Button) findViewById(R.id.party_user1);
-        progress1 = new ProgressDialog(this);
+        User1SpinImg = findViewById(R.id.spinner_img_user1);
+        layoutComponey = findViewById(R.id.layout_componey_type);
+        layoutUser = findViewById(R.id.layout_user);
+        layoutuser1 = findViewById(R.id.layout_user1);
+        submit = findViewById(R.id.show);
+        ComponeyType = findViewById(R.id.componey_type);
+        User = findViewById(R.id.party_user);
+        User1 = findViewById(R.id.party_user1);
+
+        context = this;
+        progress1 = new ProgressDialog(context);
         shareclass = new Shareclass();
         dbHelper = new DBHelper(this);
-        context=this;
-
         ArrayAdapter aa = new ArrayAdapter(PartyDetail.this, android.R.layout.simple_spinner_item, STATUS);
         aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         //Setting the ArrayAdapter data on the Spinner
@@ -131,6 +133,25 @@ public class PartyDetail extends AppCompatActivity {
                 Status.performClick();
             }
         });
+
+       /* vm_partyzDetail = ViewModelProviders.of(PartyDetail.this).get(VM_PartyzDetail.class);
+       vm_partyzDetail.setListener(context,this);*/
+
+     /* vm_partyzDetail.GedDDlCall(context, new VM_PartyzDetail.OnDDlResult() {
+            @Override
+            public void OnSuccessResult(ArrayList<DropDownModel> Componydata, ArrayList<DropDownModel> Userlist) {
+                componeydata.addAll(Componydata);
+                Userlist.addAll(Userlist);
+
+
+                finish();
+            }
+
+            @Override
+            public void OnErrorResult(String Message, String Discription) {
+
+            }
+        });*/
         ComponeyType.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -142,6 +163,7 @@ public class PartyDetail extends AppCompatActivity {
                         ComponeyName = item.getName();
                         ComponeyType.setText(ComponeyName);
                         ComponeyType.setPadding(1, 0, 5, 0);
+
                     }
 
 
@@ -252,12 +274,13 @@ public class PartyDetail extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if (!Validatepaname() | !Validatemobileno() | !ValidateEmail() | !ValidatePerson() | !ValidateCity()  | !ValidateEmpNo() ) {
+                if (!Validatepaname() | !Validatemobileno() | !ValidateEmail() | !ValidatePerson() | !ValidateCity() | !ValidateEmpNo()) {
 
                     return;
                 }
 
                 Submitdata();
+
 
 
             }
@@ -266,14 +289,11 @@ public class PartyDetail extends AppCompatActivity {
 
         HashMap<String, String> request = new HashMap<>();
         request.put("sDbName", shareclass.getValue(this, "company_code", "demo"));
-
         ArrayList<Integer> tables = new ArrayList<>();
         tables.add(0);
         tables.add(1);
-
-
         new MyAPIService(context)
-                .execute(new ResponseBuilder("FollowupOrder_ddl",request)
+                .execute(new ResponseBuilder("FollowupOrder_ddl", request)
                         .setTables(tables)
                         .setResponse(new CBOServices.APIResponse() {
                             @Override
@@ -302,17 +322,18 @@ public class PartyDetail extends AppCompatActivity {
 
 
 
-     /*   new CboServices_Old(this, mHandler).customMethodForAllServices(request, "FollowupOrder_ddl", MESSAGE_INTERNET, tables);*/
+        /*   new CboServices_Old(this, mHandler).customMethodForAllServices(request, "FollowupOrder_ddl", MESSAGE_INTERNET, tables);*/
 
 
     }
+
 
     public void Clientpoulate() {
         bundle = getIntent().getExtras();
 
 
         if (bundle != null) {
-            Paid=getIntent().getStringExtra("Paid");
+            Paid = getIntent().getStringExtra("Paid");
             HashMap<String, String> request = new HashMap<>();
             request.put("sDbName", shareclass.getValue(this, "company_code", "demo"));
             request.put("sPaId", Paid);
@@ -321,12 +342,8 @@ public class PartyDetail extends AppCompatActivity {
             tables.add(0);
 
 
-
-
-
-
             new MyAPIService(context)
-                    .execute(new ResponseBuilder("ClientPopulate",request)
+                    .execute(new ResponseBuilder("ClientPopulate", request)
                             .setTables(tables)
 
                             .setResponse(new CBOServices.APIResponse() {
@@ -335,8 +352,6 @@ public class PartyDetail extends AppCompatActivity {
                                     SetSpinnerItem();
 
                                     if (mPartyFields != null) {
-
-
                                         paname.setText(mPartyFields.get(0).getPANAME());
                                         mobile.setText(mPartyFields.get(0).getMOBILE());
                                         EmplyeeNo.setText(mPartyFields.get(0).getNOOFEMPLOYEE());
@@ -382,17 +397,16 @@ public class PartyDetail extends AppCompatActivity {
                             })
                     );
 
-         /*   new CboServices_Old(this, mHandler).customMethodForAllServices(request, "ClientPopulate", ClientPopulate, tables);
-*/
+            /*   new CboServices_Old(this, mHandler).customMethodForAllServices(request, "ClientPopulate", ClientPopulate, tables);
+             */
 
         }
     }
 
     private void Submitdata() {
-
         HashMap<String, String> request = new HashMap<>();
         request.put("sDbName", shareclass.getValue(getApplicationContext(), "company_code", "demo"));
-        request.put("iPA_ID", "0"+Paid);
+        request.put("iPA_ID", "0" + Paid);
         request.put("sPaName", paname.getText().toString());
         request.put("sMobile", mobile.getText().toString());
         request.put("sPerson", person.getText().toString());
@@ -405,7 +419,7 @@ public class PartyDetail extends AppCompatActivity {
         request.put("iUser1_Id", userId1);
         request.put("iNoOfEmployee", EmplyeeNo.getText().toString());
         request.put("sRefBy", Referby.getText().toString());
-        request.put("sPartyStatus",Status.getSelectedItem().toString());
+        request.put("sPartyStatus", Status.getSelectedItem().toString());
         request.put("sAdd1", adress1.getText().toString());
         request.put("sAdd2", adress2.getText().toString());
         request.put("sAdd3", adress3.getText().toString());
@@ -415,26 +429,24 @@ public class PartyDetail extends AppCompatActivity {
 
 
         new MyAPIService(context)
-
-                .execute(new ResponseBuilder("FollowUpOrder_Commit",request)
+                .execute(new ResponseBuilder("FollowUpOrder_Commit", request)
                         .setTables(tables)
                         .setResponse(new CBOServices.APIResponse() {
                             @Override
                             public void onComplete(Bundle message) {
 
 
-
                                 if (bundle == null) {
-                                    bundle=new Bundle();
+                                    bundle = new Bundle();
                                     bundle.putString("iId", "0");
                                     bundle.putInt("iSrno", 1);
                                     bundle.putString("iPaid", PAID);
                                     bundle.putString("header", paname.getText().toString());
                                     bundle.putString("sContactPerson", person.getText().toString());
                                     bundle.putString("sContactNo", mobile.getText().toString());
-                                    bundle.putString("iUserId",  userId);
+                                    bundle.putString("iUserId", userId);
 
-                                    new FollowupDialog(context, bundle, FOLLOWUP_DIALOG, false,new FollowupDialog.IFollowupDialog() {
+                                    new FollowupDialog(context, bundle, FOLLOWUP_DIALOG, false, new FollowupDialog.IFollowupDialog() {
                                         @Override
                                         public void onFollowSubmit() {
 
@@ -446,13 +458,11 @@ public class PartyDetail extends AppCompatActivity {
 
                                     }).show();
 
-                                }
-
-                                else {
+                                } else {
                                     Toast.makeText(PartyDetail.this, "Data Submitted", Toast.LENGTH_SHORT).show();
                                     finish();
 
-                                   }
+                                }
                             }
 
 
@@ -465,10 +475,6 @@ public class PartyDetail extends AppCompatActivity {
 
                         })
                 );
-
-
-
-
 
 
 //        new CboServices_Old(getApplicationContext(), mHandler).customMethodForAllServices(request, "FollowUpOrder_Commit", FollowUpOrder_Commit, tables);
@@ -516,31 +522,20 @@ public class PartyDetail extends AppCompatActivity {
     private boolean isValidMobile(String phone) {
 
 
-
         return android.util.Patterns.PHONE.matcher(phone).matches();
     }
 
     public boolean Validatemobileno() {
-
-
-
-
         String usermobile = mobile.getText().toString().trim();
-
         if (usermobile.isEmpty()) {
             mobile.setError("Please enter your mobileno");
             return false;
-        } else if (!Patterns.PHONE.matcher(usermobile).matches()) {
-            mobile.setError("Please enter valid  mobileno");
-            return false;
-        }
-        else if(usermobile.length()!=10){
+        } else if (usermobile.length() < 10) {
 
             mobile.setError("Please enter valid  mobileno");
             return false;
 
-        }
-        else {
+        } else {
             mobile.setError(null);
             return true;
         }
@@ -553,7 +548,7 @@ public class PartyDetail extends AppCompatActivity {
             email.setError("Please enter your email");
             return false;
         } else if (!Patterns.EMAIL_ADDRESS.matcher(useremail).matches()) {
-            email.setError("Please enter valid  email adresss");
+            email.setError("Please enter valid  email address");
             return false;
         } else {
             email.setError(null);
@@ -625,7 +620,7 @@ public class PartyDetail extends AppCompatActivity {
         String username = adress1.getText().toString().trim();
 
         if (username.isEmpty()) {
-            adress1.setError("Please enter  Adress1");
+            adress1.setError("Please enter  Address1");
             return false;
         } else {
             adress1.setError(null);
@@ -672,81 +667,59 @@ public class PartyDetail extends AppCompatActivity {
 
     public void parser1(Bundle result) {
 
-            //dbHelper.deleteMenu();
-            try {
-                String table0 = result.getString("Tables0");
-                JSONArray jsonArray1 = new JSONArray(table0);
-                for (int i = 0; i < jsonArray1.length(); i++) {
-                    JSONObject c = jsonArray1.getJSONObject(i);
-                    componeydata.add(new DropDownModel(c.getString("PA_NAME"), "0"));
-                }
+        //dbHelper.deleteMenu();
+        try {
+            String table0 = result.getString("Tables0");
+            JSONArray jsonArray1 = new JSONArray(table0);
+            for (int i = 0; i < jsonArray1.length(); i++) {
+                JSONObject c = jsonArray1.getJSONObject(i);
+                componeydata.add(new DropDownModel(c.getString("PA_NAME"), "0"));
+            }
+            if (componeydata.size() != 1) {
+                ComponeyId = componeydata.get(0).getId();
+                ComponeyName = componeydata.get(0).getName();
 
-               // componeydataCopy.addAll(componeydata);
-
-                if (componeydata.size() != 1) {
-
-
-                    ComponeyId = componeydata.get(0).getId();
-                    ComponeyName = componeydata.get(0).getName();
-
-
-
-                }
-
-
-                String table1 = result.getString("Tables1");
-                JSONArray jsonArray2 = new JSONArray(table1);
-                for (int i = 0; i < jsonArray2.length(); i++) {
-                    JSONObject c = jsonArray2.getJSONObject(i);
-                    UserData.add(new DropDownModel(c.getString("USER_NAME"), c.getString("ID")));
-                }
-                UserData.addAll(UserData1);
-               // UserDataCopy.addAll(UserData);
-               // UserData1.addAll(UserData);
-                if (UserData.size() != 1) {
-                    userId = UserData.get(1).getId();
-                    userName = UserData.get(1).getName();
-
-                    userId1 = UserData.get(1).getId();
-
-
-                 }
-
-
-
-
-            } catch (JSONException e) {
-                Log.d("MYAPP", "objects are: " + e.toString());
-                CboServices_Old.getAlert(this, "Missing field error", getResources().getString(R.string.service_unavilable) + e.toString());
-                e.printStackTrace();
             }
 
+            String table1 = result.getString("Tables1");
+            JSONArray jsonArray2 = new JSONArray(table1);
+            for (int i = 0; i < jsonArray2.length(); i++) {
+                JSONObject c = jsonArray2.getJSONObject(i);
+                UserData.add(new DropDownModel(c.getString("USER_NAME"), c.getString("ID")));
+            }
+            UserData.addAll(UserData1);
+
+            if (UserData.size() != 1) {
+                userId = UserData.get(1).getId();
+                userName = UserData.get(1).getName();
+                userId1 = UserData.get(1).getId();
+            }
+
+
+        } catch (JSONException e) {
+            Log.d("MYAPP", "objects are: " + e.toString());
+            CboServices_Old.getAlert(this, "Missing field error", getResources().getString(R.string.service_unavilable) + e.toString());
+            e.printStackTrace();
         }
 
-
+    }
 
 
     private void parser2(Bundle result) {
         if (result != null) {
 
             try {
-
-
                 String table0 = result.getString("Tables0");
                 JSONArray jsonArray1 = new JSONArray(table0);
                 mPartyFields.clear();
                 for (int i = 0; i < jsonArray1.length(); i++) {
                     JSONObject c = jsonArray1.getJSONObject(i);
                     PAID = c.getString("PA_ID");
-
-
                 }
 
-
-            }catch (Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-
         }
 
 
@@ -754,107 +727,62 @@ public class PartyDetail extends AppCompatActivity {
 
     private void parser3(Bundle result1) {
         {
+            try {
+                String table0 = result1.getString("Tables0");
+                JSONArray jsonArray1 = new JSONArray(table0);
+                mPartyFields.clear();
+                for (int i = 0; i < jsonArray1.length(); i++) {
+                    JSONObject c = jsonArray1.getJSONObject(i);
+                    mPartyField mFields = new mPartyField();
 
+                    String paid = c.getString("PA_ID");
+                    mFields.setPAID(paid);
+                    String name = c.getString("PA_NAME");
+                    mFields.setPANAME(name);
+                    String contact = c.getString("MOBILE");
+                    mFields.setMOBILE(contact);
+                    String companytype = c.getString("COMPANY_TYPE");
+                    mFields.setCOMPANYTYPE(companytype);
+                    USERID = c.getString("USER_ID");
+                    mFields.setUSERID(USERID);
+                    USERID1 = c.getString("USER1_ID");
+                    mFields.setUSER1ID(USERID1);
+                    String NoofEmp = c.getString("NO_OF_EMPLOYEE");
+                    mFields.setNOOFEMPLOYEE(NoofEmp);
+                    String websit = c.getString("WEB_SITE");
+                    mFields.setWEBSITE(websit);
+                    String Person = c.getString("PERSON");
+                    mFields.setPERSON(Person);
+                    String referby = c.getString("REF_BY");
+                    mFields.setREFBY(referby);
 
-                try {
-
-
-                    String table0 = result1.getString("Tables0");
-                    JSONArray jsonArray1 = new JSONArray(table0);
-                    mPartyFields.clear();
-                    for (int i = 0; i < jsonArray1.length(); i++) {
-                        JSONObject c = jsonArray1.getJSONObject(i);
-                        mPartyField mFields = new mPartyField();
-
-                        String paid = c.getString("PA_ID");
-                        mFields.setPAID(paid);
-                        String name = c.getString("PA_NAME");
-                        mFields.setPANAME(name);
-                        String contact = c.getString("MOBILE");
-                        mFields.setMOBILE(contact);
-                        String companytype = c.getString("COMPANY_TYPE");
-                        mFields.setCOMPANYTYPE(companytype);
-                        USERID = c.getString("USER_ID");
-                        mFields.setUSERID(USERID);
-                        USERID1 = c.getString("USER1_ID");
-                        mFields.setUSER1ID(USERID1);
-                        String NoofEmp = c.getString("NO_OF_EMPLOYEE");
-                        mFields.setNOOFEMPLOYEE(NoofEmp);
-                        String websit = c.getString("WEB_SITE");
-                        mFields.setWEBSITE(websit);
-                        String Person = c.getString("PERSON");
-                        mFields.setPERSON(Person);
-                        String referby = c.getString("REF_BY");
-                        mFields.setREFBY(referby);
-
-                        String PStatus = c.getString("PARTY_STATUS");
-                        mFields.setPARTYSTATUS(PStatus);
+                    String PStatus = c.getString("PARTY_STATUS");
+                    mFields.setPARTYSTATUS(PStatus);
                         /*mFields.(convert(user1name));
                         String user = c.getString("USER_NAME");
                         mFields.setuSERNAME(convert(user));*/
-                        String Email = c.getString("EMAIL");
-                        mFields.setEMAIL(Email);
-                        String City = c.getString("CITY");
-                        mFields.setCITY(City);
-                        String add1 = c.getString("ADD1");
-                        mFields.setADD1(add1);
-                        String add2 = c.getString("ADD2");
-                        mFields.setADD2(add2);
-                        String add3 = c.getString("ADD3");
-                        mFields.setADD3(add3);
-                        String add4 = c.getString("ADD4");
-                        mFields.setADD4(add4);
-                       mPartyFields.add(mFields);
-//
-//                        mPartyFields.add(mFields);
-//                        paname.setText(name);
-//                        EmplyeeNo.setText(NoofEmp);
-//                        city.setText(City);
-//                        mobile.setText(contact);
-//                        ComponeyType.setText(companytype);
-//                        if(mFields.getPARTYSTATUS()!=""){
-//                           if(mFields.getPARTYSTATUS().equals("InProcess")){
-//
-//                               Status.setSelection(1);
-//                           }
-//                             else if(mFields.getPARTYSTATUS().equals("Done")){
-//
-//                                Status.setSelection(0);
-//                            }
-//                            else if (mFields.getPARTYSTATUS().equals("Not Intrested")){
-//
-//                                Status.setSelection(2);
-//                            }
-//                           else{
-//                               Status.setSelection(1);
-//                           }
-//
-//                          //  Status.setSelection(Integer.parseInt(mFields.getPARTYSTATUS()));
-//                        }
-//
-//                        //User.setText(UserData.get(Integer.parseInt(userId)).getName());
-//                        // User1.setText(UserData.get(Integer.parseInt(user1Id)).getName());
-//                        email.setText(Email);
-//                        person.setText(Person);
-//                        Referby.setText(referby);
-//                        EmplyeeNo.setText(NoofEmp);
-//                        website.setText(websit);
-//                        adress1.setText(add1);
-//                        adress2.setText(add2);
-//                        adress3.setText(add3);
-//                        adress4.setText(add4);
-                    }
-
-
-
-
-                } catch (Exception e) {
-
-                    e.printStackTrace();
+                    String Email = c.getString("EMAIL");
+                    mFields.setEMAIL(Email);
+                    String City = c.getString("CITY");
+                    mFields.setCITY(City);
+                    String add1 = c.getString("ADD1");
+                    mFields.setADD1(add1);
+                    String add2 = c.getString("ADD2");
+                    mFields.setADD2(add2);
+                    String add3 = c.getString("ADD3");
+                    mFields.setADD3(add3);
+                    String add4 = c.getString("ADD4");
+                    mFields.setADD4(add4);
+                    mPartyFields.add(mFields);
                 }
+
+
+            } catch (Exception e) {
+
+                e.printStackTrace();
             }
         }
-
+    }
 
 
     @Override
@@ -891,14 +819,19 @@ public class PartyDetail extends AppCompatActivity {
 
             }
         }
-            for (int j = 0; j < UserData1.size(); j++) {
-                if (UserData1.get(j).getId().equals(USERID1)) {
-                    userId1 = UserData1.get(j).getId();
-                    userName1 = UserData1.get(j).getName();
-                    User1.setText(userName1);
-                    User1.setPadding(1, 0, 5, 0);
+        for (int j = 0; j < UserData1.size(); j++) {
+            if (UserData1.get(j).getId().equals(USERID1)) {
+                userId1 = UserData1.get(j).getId();
+                userName1 = UserData1.get(j).getName();
+                User1.setText(userName1);
+                User1.setPadding(1, 0, 5, 0);
 
-                }
             }
         }
     }
+
+
+
+
+
+}

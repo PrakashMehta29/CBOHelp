@@ -6,7 +6,9 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
+import android.media.Image;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,10 +25,13 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.example.pc24.cbohelp.AddParty.PartyDetail;
+import com.example.pc24.cbohelp.AddParty.PartyDetail2;
 import com.example.pc24.cbohelp.Followingup.CustomDatePicker;
 import com.example.pc24.cbohelp.R;
+import com.example.pc24.cbohelp.Spinner_Dialog;
 import com.example.pc24.cbohelp.appPreferences.Shareclass;
 import com.example.pc24.cbohelp.dbHelper.DBHelper;
+import com.example.pc24.cbohelp.utils.DropDownModel;
 import com.example.pc24.cbohelp.utils.MyAPIService;
 import com.uenics.javed.CBOLibrary.CBOServices;
 import com.uenics.javed.CBOLibrary.ResponseBuilder;
@@ -40,7 +45,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PartyActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
+public class PartyActivity extends AppCompatActivity implements SearchView.OnQueryTextListener,IParty {
     private static final int CLIENTMAINGRID = 1;
     public ProgressDialog progress1;
     ArrayList<Map<String, String>> data = new ArrayList<Map<String, String>>();
@@ -53,27 +58,72 @@ public class PartyActivity extends AppCompatActivity implements SearchView.OnQue
     SwipeController swipeController = null;
     Shareclass shareclass;
     DBHelper dbHelper;
-    ImageView img_followdate, img_nextfollowdate, Img_party;
+    ImageView img_followdate, img_nextfollowdate, Img_party,spn_user,spn_user1;
     RadioGroup radioGroup;
     RadioButton entrydate, followingdate;
-    Button fromdatebtn, todatebtn, Gobtn;
+    Button fromdatebtn, todatebtn, Gobtn,UserBtn,UserBtn1;
     LinearLayout  Lmissedtype;
     TextView PartyTxt;
-     String ViewBy="";
-     TextView TotalParty;
+    String ViewBy="";TextView TotalParty;
     String Paid="",SelectedPaid="";
-    String FDate="",Todate="";
+    String userId="",userName="",userId1="",userName1="";
     Vm_Party vm_party=null;
-
+    LinearLayout userLayout;
+    String DesgId="";
 
     Status status=Status.All;
 
+    @Override
+    public void onUserChanged(DropDownModel user) {
 
+
+
+        UserBtn.setText(user.getName());
+        UserBtn.setPadding(1, 0, 5, 0);
+    }
+
+    @Override
+    public void onUser1Changed(DropDownModel user) {
+
+
+        UserBtn1.setText(user.getName());
+        UserBtn1.setPadding(1, 0, 5, 0);
+    }
+
+    @Override
+    public void onFromDateChanged(Date date) {
+        fromdatebtn.setText(CustomDatePicker.formatDate(date, CustomDatePicker.ShowFormat));
+    }
+
+    @Override
+    public void onToDateChanged(Date date) {
+        todatebtn.setText(CustomDatePicker.formatDate(date, CustomDatePicker.ShowFormat));
+    }
+
+    @Override
+    public void onUserListChanged(ArrayList<DropDownModel> users) {
+        String id =shareclass.getValue(this,"PA_ID","0");
+        for (int i = 0; i < users.size(); i++) {
+            if (users.get(i).getId().equals(id)) {
+                vm_party.setUSER(users.get(i));
+                vm_party.setUSER1(users.get(i));
+                }
+        }
+        GetAllParty( );
+    }
+
+    @Override
+    public void onPartyListChanged(ArrayList<mParty> parties) {
+        mAdapter = new Partyviewapdater(context, parties,SelectedPaid);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(mAdapter);
+        TotalParty.setText(""+mAdapter.getItemCount());
+    }
 
 
     enum Status {
-
-
         All(0),
         Done(1),
         inProcess(2),
@@ -104,236 +154,228 @@ public class PartyActivity extends AppCompatActivity implements SearchView.OnQue
         img_nextfollowdate = (ImageView) findViewById(R.id.spinner_img_nextfollowdate);
         PartyTxt = (TextView) findViewById(R.id.party_name);
         Lmissedtype = (LinearLayout) findViewById(R.id.layout_party);
-        TotalParty=(TextView) findViewById(R.id.Tpartycount);
+        TotalParty = (TextView) findViewById(R.id.Tpartycount);
         Gobtn = (Button) findViewById(R.id.btn_go);
         radioGroup = (RadioGroup) findViewById(R.id.viewby);
         entrydate = (RadioButton) findViewById(R.id.entrydate);
         followingdate = (RadioButton) findViewById(R.id.followingdate);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        UserBtn = (Button) findViewById(R.id.btn_usertype);
+        UserBtn1 = (Button) findViewById(R.id.btn_usertype1);
+        spn_user = (ImageView) findViewById(R.id.spinner_img_usertype);
+        spn_user1 = (ImageView) findViewById(R.id.spinner_img_usertype1);
+       userLayout = (  LinearLayout)findViewById(R.id.userLayout);
+
+
         if (getSupportActionBar() != null) {
 
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle(getIntent().getStringExtra("headername"));
         }
 
-        if (getSupportActionBar() != null) {
-
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
-        getSupportActionBar().setTitle(" Select Client");
         context = this;
         shareclass = new Shareclass();
         vm_party = ViewModelProviders.of(PartyActivity.this).get(Vm_Party.class);
+        vm_party.setListener(this);
 
 
+        vm_party.setFadte(new Date());
+        vm_party.setTodate(new Date());
+          DesgId=shareclass.getValue(context, "DESIG_ID", "0");
+        if (!shareclass.getValue(context,"CATEGORY","").equalsIgnoreCase("ADMIN")) {
 
+            userLayout.setVisibility(View.GONE);
 
-
-        fromdatebtn.setText(CustomDatePicker.currentDate( CustomDatePicker.ShowFormat));
-      //  FDate=CustomDatePicker.currentDate(CustomDatePicker.CommitFormat);
-        vm_party.setFadte(CustomDatePicker.currentDate(CustomDatePicker.CommitFormat));
-        todatebtn.setText(CustomDatePicker.currentDate( CustomDatePicker.ShowFormat));
-       // Todate=CustomDatePicker.currentDate(CustomDatePicker.CommitFormat);
-        vm_party.setTodate(CustomDatePicker.currentDate(CustomDatePicker.CommitFormat));
-        Gobtn.setOnClickListener(new View.OnClickListener() {
+        }
+        else{
+            GetDDL();
+        }
+        final SwipeRefreshLayout pullToRefresh = findViewById(R.id.pullToRefresh);
+        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void onClick(View view) {
+            public void onRefresh() {
 
-                GetAllParty();
+                DesgId=shareclass.getValue(context, "DESIG_ID", "0");
+                if (!shareclass.getValue(context,"CATEGORY","").equalsIgnoreCase("ADMIN")) {
 
-            }
-        });
-        fromdatebtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    new CustomDatePicker(context, null,
-                            CustomDatePicker.getDate(todatebtn.getText().toString(), CustomDatePicker.ShowFormat)
-                    ).Show(CustomDatePicker.getDate(fromdatebtn.getText().toString(),  CustomDatePicker.ShowFormat)
-                            , new CustomDatePicker.ICustomDatePicker() {
-                                @Override
-                                public void onDateSet(Date date) {
-                                    fromdatebtn.setText(CustomDatePicker.formatDate(date,CustomDatePicker.ShowFormat));
-                                   // FDate=(CustomDatePicker.formatDate(date,CustomDatePicker.CommitFormat));
-                                    vm_party.setFadte(CustomDatePicker.formatDate(date,CustomDatePicker.CommitFormat));
-                                    //vm_following.setFromDate(CustomDatePicker.formatDate(date,CustomDatePicker.CommitFormat));
-                                }
-                            });
+                    userLayout.setVisibility(View.GONE);
 
-                } catch (ParseException e) {
-                    e.printStackTrace();
+                }
+                else{
+
+                   GetAllParty();
                 }
 
+                pullToRefresh.setRefreshing(false);
             }
         });
 
-        todatebtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    new CustomDatePicker(context,
-                            CustomDatePicker.getDate(fromdatebtn.getText().toString(),  CustomDatePicker.ShowFormat))
-                            .Show(CustomDatePicker.getDate(todatebtn.getText().toString(),  CustomDatePicker.ShowFormat)
-                                    , new CustomDatePicker.ICustomDatePicker() {
-                                        @Override
-                                        public void onDateSet(Date date) {
-                                            todatebtn.setText(CustomDatePicker.formatDate(date,CustomDatePicker.ShowFormat));
-                                          //   Todate=CustomDatePicker.formatDate(date,CustomDatePicker.CommitFormat);
-                                             vm_party.setTodate(CustomDatePicker.formatDate(date,CustomDatePicker.CommitFormat));
-                                        }
-                                    });
-                } catch (ParseException e) {
-                    e.printStackTrace();
+            Gobtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    GetAllParty();
+
                 }
-            }
-        });
-        img_followdate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                fromdatebtn.performClick();
-
-            }
-        });
-        img_nextfollowdate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                todatebtn.performClick();
-            }
-        });
-
-/*
-        Lmissedtype.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+            });
 
 
-                Intent intent1 = new Intent(PartyActivity.this, PartyActivity.class);
-                startActivityForResult(intent1, 0);
-            }
-        });*/
+            fromdatebtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    try {
+                        new CustomDatePicker(context, null,
+                                CustomDatePicker.getDate(todatebtn.getText().toString(), CustomDatePicker.ShowFormat)
+                        ).Show(CustomDatePicker.getDate(fromdatebtn.getText().toString(), CustomDatePicker.ShowFormat)
+                                , new CustomDatePicker.ICustomDatePicker() {
+                                    @Override
+                                    public void onDateSet(Date date) {
+                                        vm_party.setFadte(date);
+                                    }
+                                });
 
-       // ViewBy="F";
-        vm_party.setViewBy("N");
-        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                int selectedId = radioGroup.getCheckedRadioButtonId();
-                if (selectedId == R.id.entrydate) {
-                  //  ViewBy="N";
-                    vm_party.setViewBy("F");
-                } else {
-                  //  ViewBy="F";
-                    vm_party.setViewBy("N");
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
                 }
-            }
-        });
+            });
+
+            todatebtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    try {
+                        new CustomDatePicker(context,
+                                CustomDatePicker.getDate(fromdatebtn.getText().toString(), CustomDatePicker.ShowFormat))
+                                .Show(CustomDatePicker.getDate(todatebtn.getText().toString(), CustomDatePicker.ShowFormat)
+                                        , new CustomDatePicker.ICustomDatePicker() {
+                                            @Override
+                                            public void onDateSet(Date date) {
+
+                                                vm_party.setTodate(date);
+                                            }
+                                        });
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            img_followdate.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    fromdatebtn.performClick();
+
+                }
+            });
+            img_nextfollowdate.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    todatebtn.performClick();
+                }
+            });
+
+            UserBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    new Spinner_Dialog(PartyActivity.this, vm_party.UserData, new Spinner_Dialog.OnItemClickListener() {
+
+                        @Override
+                        public void ItemSelected(DropDownModel item) {
+                            vm_party.setUSER(item);
+                        }
 
 
-        setupRecyclerView();
+                    }).show();
+                }
+            });
+            UserBtn1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    new Spinner_Dialog(PartyActivity.this, vm_party.UserData, new Spinner_Dialog.OnItemClickListener() {
+
+                        @Override
+                        public void ItemSelected(DropDownModel item) {
+                            vm_party.setUSER1(item);
+                        }
+
+
+                    }).show();
+                }
+            });
+            spn_user.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    UserBtn.performClick();
+                }
+            });
+
+            spn_user1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    UserBtn1.performClick();
+                }
+            });
+
+            vm_party.setViewBy("N");
+            radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                    int selectedId = radioGroup.getCheckedRadioButtonId();
+                    if (selectedId == R.id.entrydate) {
+                        //  ViewBy="N";
+                        vm_party.setViewBy("F");
+                    } else {
+                        //  ViewBy="F";
+                        vm_party.setViewBy("N");
+                    }
+                }
+            });
+
+
+            setupRecyclerView();
     }
+
+
+
 
     @Override
     protected void onResume() {
         super.onResume();
         if (mAdapter != null)
             SelectedPaid = mAdapter.SelectedPaid;
-        GetAllParty();
+
+        if (!shareclass.getValue(context,"CATEGORY","").equalsIgnoreCase("ADMIN")) {
+
+
+            vm_party.setUSER1(new DropDownModel("",shareclass.getValue(this,"PA_ID","0")));
+            vm_party.setUSER(new DropDownModel("",shareclass.getValue(this,"PA_ID","0")));
+            GetAllParty();
+        }
+
+        else{
+
+//            GetDDL();
+//            vm_party.setUSER1(new DropDownModel("",shareclass.getValue(this,"PA_ID","0")));
+//            vm_party.setUSER(new DropDownModel("",shareclass.getValue(this,"PA_ID","0")));
+//           // UserBtn.setText(new ArrayList<DropDownModel> user("",shareclass.getValue(this,"PA_ID","0"));
+//            GetAllParty();
+
+
+
+        }
+
 
     }
+
+    private void GetDDL() {
+        vm_party.GetUserList(context);
+    }
+
 
     private void GetAllParty( ) {
-
-        vm_party.GetAllParty(context, new Vm_Party.OnResultlistener() {
-            @Override
-            public void SucessResult(ArrayList<mParty> mParties) {
-                mAdapter = new Partyviewapdater(context, mParties,SelectedPaid);
-                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-                recyclerView.setLayoutManager(mLayoutManager);
-                recyclerView.setItemAnimator(new DefaultItemAnimator());
-                recyclerView.setAdapter(mAdapter);
-                TotalParty.setText(""+mAdapter.getItemCount());
-            }
-
-            @Override
-            public void ErrorResult(String Error, String Title) {
-
-            }
-        });
-
-
-       /* HashMap<String, String> request = new HashMap<>();
-        request.put("sDbName", shareclass.getValue(context, "company_code", "demo"));
-        request.put("iUserId", "140");
-        request.put("iStatus", ""+status.getValue());
-        request.put("sFDATE",FDate );
-        request.put("sTDATE", Todate);
-        request.put("sDOC_TYPE",ViewBy);
-
-
-        new MyAPIService(context)
-                .execute(new ResponseBuilder("ClientMainGrid",request)
-                        .setResponse(new CBOServices.APIResponse() {
-                            @Override
-                            public void onComplete(Bundle message) {
-                                //parser2(message);
-                                mAdapter = new Partyviewapdater(context, parytdata,SelectedPaid);
-                                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-                                recyclerView.setLayoutManager(mLayoutManager);
-                                recyclerView.setItemAnimator(new DefaultItemAnimator());
-                                recyclerView.setAdapter(mAdapter);
-                                TotalParty.setText(""+mAdapter.getItemCount());
-                            }
-
-                            @Override
-                            public void onResponse(Bundle response) {
-                                parser2(response);
-                            }
-
-
-                        })
-                );
-
-*/
-
+        vm_party.GetAllParty(context);
     }
-
-
-
-  /*  private void parser2(Bundle result) {
-        {
-            try {
-
-
-                    String table0 = result.getString("Tables0");
-                    JSONArray jsonArray1 = new JSONArray(table0);
-                    parytdata.clear();
-                    for (int i = 0; i < jsonArray1.length(); i++) {
-                        JSONObject c = jsonArray1.getJSONObject(i);
-
-
-                        rptModel= new mParty();
-
-                        Paid= c.getString("PA_ID");
-                        rptModel.setId(Paid);
-                        String name=c.getString("PA_NAME");
-                        rptModel.setName(name);
-                        String Mobile=c.getString("MOBILE");
-                        rptModel.setMobile(Mobile);
-                        String Person=c.getString("PERSON");
-                        rptModel.setPerson(Person);
-                        String Status=c.getString("STATUS");
-                        rptModel.setStatus(Status);
-                        parytdata.add(rptModel);
-
-                    }
-
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-
-    }*/
 
     private void setupRecyclerView() {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
@@ -427,7 +469,7 @@ public class PartyActivity extends AppCompatActivity implements SearchView.OnQue
 
                 break;
             case R.id.add_party:
-                Intent i = new Intent(PartyActivity.this, PartyDetail.class);
+                Intent i = new Intent(PartyActivity.this, PartyDetail2.class);
                 startActivity(i);
                 break;
 

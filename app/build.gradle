@@ -2,11 +2,11 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 28
-    buildToolsVersion "24.0.2"
+   buildToolsVersion "27.0.3"
     defaultConfig {
         applicationId "com.example.pc24.cbohelp"
         minSdkVersion 15
-        targetSdkVersion 28
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -20,37 +20,36 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
-    compile files('libs/ftp4j-1.6.jar')
+    implementation files('libs/ftp4j-1.6.jar')
     //for mail
-    compile files('libs/activation.jar')
-    compile files('libs/mail.jar')
-    compile files('libs/additionnal.jar')
-    compile project(':CBOLibrary')
+    implementation files('libs/activation.jar')
+    implementation files('libs/mail.jar')
+    implementation files('libs/additionnal.jar')
+    implementation project(':CBOLibrary')
 
 
 
     ///////
-    compile files('libs/ksoap2-android-assembly-2.5.8-jar-with-dependencies.jar')
+    implementation files('libs/ksoap2-android-assembly-2.5.8-jar-with-dependencies.jar')
 
     //noinspection GradleCompatible
-    compile 'com.android.support:appcompat-v7:25.1.0'
-    compile 'com.google.firebase:firebase-core:10.0.0'
-    compile 'com.google.firebase:firebase-messaging:10.0.0'
-    compile 'com.android.support:design:25.0.1'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.android.support:recyclerview-v7:25.3.1'
-    compile 'com.android.support:support-v4:25.1.0'
-    compile 'com.android.support:cardview-v7:25.0.1'
-    compile 'android.arch.lifecycle:extensions:1.0.0'
-
-    compile 'com.chauthai.swipereveallayout:swipe-reveal-layout:1.4.1'
-
-    testCompile 'junit:junit:4.12'
+    implementation 'com.android.support:appcompat-v7:26.0.0'
+   // implementation 'com.android.support:appcompat-v7:21.1.1'
+    implementation 'com.google.firebase:firebase-core:10.2.1'
+    implementation 'com.google.firebase:firebase-messaging:10.2.1'
+    implementation 'com.android.support:design:28.0.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    implementation 'com.android.support:recyclerview-v7:28.0.0'
+    implementation 'com.android.support:support-v4:28.0.0'
+    implementation 'com.android.support:cardview-v7:28.0.0'
+    implementation 'android.arch.lifecycle:extensions:1.1.1'
+    implementation 'com.chauthai.swipereveallayout:swipe-reveal-layout:1.4.1'
+    testImplementation 'junit:junit:4.12'
 }
 
 apply plugin: 'com.google.gms.google-services'

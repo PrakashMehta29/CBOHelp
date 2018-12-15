@@ -23,10 +23,33 @@ public class mPartyField {
     private String aDD1;
     private String aDD2;
     private String aDD3;
+
+    public mPartyField( String pANAME, String mOBILE, String pERSON, String cITY, String uSERID, String aUSERID,String Userid1,String eMAIL, String cOMPANYTYPE, String wEBSITE, String nOOFEMPLOYEE, String rEFBY, String pARTYSTATUS, String aDD1, String aDD2, String aDD3, String aDD4) {
+
+        this.pANAME = pANAME;
+        this.mOBILE = mOBILE;
+        this.pERSON = pERSON;
+        this.cITY = cITY;
+        this.uSERID = uSERID;
+        this.aUSERID = aUSERID;
+        this.eMAIL = eMAIL;
+        this.cOMPANYTYPE = cOMPANYTYPE;
+        this.wEBSITE = wEBSITE;
+        this.nOOFEMPLOYEE = nOOFEMPLOYEE;
+        this.rEFBY = rEFBY;
+        this.pARTYSTATUS = pARTYSTATUS;
+        this.aDD1 = aDD1;
+        this.aDD2 = aDD2;
+        this.aDD3 = aDD3;
+        this.aDD4 = aDD4;
+        this.uSER1ID=Userid1;
+    }
+
+    public mPartyField() {
+    }
+
     private String aDD4;
     private String pRIORITYSTATUS;
-
-
 
 
     public String getPAID() {

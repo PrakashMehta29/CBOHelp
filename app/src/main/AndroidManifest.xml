@@ -70,6 +70,7 @@
             android:name=".utils.GalleryUtil"
             android:configChanges="orientation|screenSize|keyboardHidden" />
         <activity android:name=".AddParty.PartyDetail" />
+        <activity android:name=".AddParty.PartyDetail2" />
         <activity
             android:name=".utils.ClientNew.ClientList"
             android:exported="true"
@@ -86,6 +87,8 @@
         <activity android:name=".Followingup.NewPartyActivity"
            />
         <activity android:name=".FollowUp.FollowUpCommit" />
+        <activity android:name=".Dashboard" />
+
     </application>
 
 </manifest>

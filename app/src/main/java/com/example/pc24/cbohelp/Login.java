@@ -54,6 +54,12 @@ public class Login extends AppCompatActivity {
     DBHelper dbHelper;
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
@@ -159,7 +165,7 @@ public class Login extends AppCompatActivity {
 
     private void open_activity(){
 
-        Intent intent = new Intent(Login.this, Client_Complain_list.class);
+        Intent intent = new Intent(Login.this, Dashboard.class);
         intent.putExtra("pa_id", "");
         intent.putExtra("name","ALL");
         intent.putExtra("s1", "");
@@ -214,10 +220,10 @@ public class Login extends AppCompatActivity {
                         shareclass.save(this,"MOBILE",jsonObject2.getString("MOBILE"));
                         shareclass.save(this,"PHONE",jsonObject2.getString("PHONE"));
                         shareclass.save(this,"DESIG_ID",jsonObject2.getString("DESIG_ID"));
+                        shareclass.save(this,"CATEGORY",jsonObject2.getString("CATEGORY"));
                         valid_user=true;
                     }else{
-                        Toast.makeText(this,jsonObject2.getString("STATUS"),Toast.LENGTH_LONG).show();
-                    }
+                        Toast.makeText(this,jsonObject2.getString("STATUS"),Toast.LENGTH_LONG).show(); }
 
 
                 }

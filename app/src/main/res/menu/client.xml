@@ -14,13 +14,13 @@
         android:title="filter"
         app:showAsAction="always" />
 
-    <item
+    <!--<item
         android:id="@+id/party_status"
         android:orderInCategory="100"
         android:icon="@drawable/followup"
         android:title="Followup"
         app:showAsAction="always" >
-    </item>
+    </item>-->
 
 
 

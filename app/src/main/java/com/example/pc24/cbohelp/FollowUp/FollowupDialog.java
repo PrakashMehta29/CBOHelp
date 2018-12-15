@@ -64,22 +64,14 @@ import java.util.Locale;
     String Current_Date="";
     String msg="";
     private Boolean negativeBtnReqd = true;
-
-
-
-
-
-
-
-
-
-
+    private Boolean Postivebtnreq   =  true;
     public interface IFollowupDialog{
         void onFollowSubmit();
     }
 
-    public FollowupDialog(@NonNull Context context, Bundle Msg, Integer response_code,IFollowupDialog iFollowupDialog) {
-
+    public FollowupDialog(@NonNull Context context, Bundle Msg, Integer response_code,boolean postivebtnreq,boolean negativeBtnReqd,IFollowupDialog iFollowupDialog) {
+        this.negativeBtnReqd = negativeBtnReqd;
+        this.Postivebtnreq = postivebtnreq;
         this.context = context;
         this.iFollowupDialog = iFollowupDialog;
         this.response_code = response_code;
@@ -97,12 +89,22 @@ import java.util.Locale;
         this.Msg = Msg;
 
     }
+   /* public FollowupDialog newinstance(@NonNull Context context, Bundle Msg, Integer response_code,boolean negativeBtnReqd,IFollowupDialog iFollowupDialog) {
+  FollowupDialog followupDialog=new FollowupDialog(context,Msg);
+        this.negativeBtnReqd = negativeBtnReqd;
+        this.context = context;
+        this.iFollowupDialog = iFollowupDialog;
+        this.response_code = response_code;
+        this.Msg = Msg;
 
+        return followupDialog;
+    }*/
     public void show() {
         dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.custom_dialog, null, false);
+
 
         ((Activity) context).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         dialog.setContentView(view);
@@ -110,8 +112,6 @@ import java.util.Locale;
         window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
         window.setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         window.setGravity(Gravity.CENTER);
-
-
 
 
 
@@ -131,12 +131,6 @@ import java.util.Locale;
         nextfollowup_Date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
-
-
-
-
                 try {
                     new CustomDatePicker(context, CustomDatePicker.getDate(Current_Date,CustomDatePicker.CommitFormat))
                             .Show(CustomDatePicker.getDate(nextfollowup_Date.getText().toString(),  CustomDatePicker.ShowFormat)
@@ -153,9 +147,6 @@ import java.util.Locale;
                     e.printStackTrace();
                 }
 
-              /*  new DatePickerDialog(context, date, myCalendar
-                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();*/
 
             }
         });
@@ -166,17 +157,15 @@ import java.util.Locale;
 
             }
         });
+
+        if(Postivebtnreq==false){
+            Submit.setVisibility(View.GONE);
+        }
         Submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-
-
-
-
-
 //Extract the data…
-
                 HashMap<String, String> request = new HashMap<>();
                 request.put("sDbName", shareclass.getValue(context, "company_code", "demo"));
                 request.put("iId", Msg.getString("iId"));
