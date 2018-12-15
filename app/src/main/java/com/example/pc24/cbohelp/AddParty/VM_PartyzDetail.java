@@ -22,6 +22,8 @@ import java.util.HashMap;
 
 public class VM_PartyzDetail
         extends ViewModel {
+
+
     public static final int FOLLOWUP_DIALOG = 0;
     ArrayList<mPartyField> mPartyFields = new ArrayList<>();
     ArrayList<DropDownModel> Componydata = new ArrayList<DropDownModel>();
