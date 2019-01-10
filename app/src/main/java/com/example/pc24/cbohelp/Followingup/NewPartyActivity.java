@@ -29,6 +29,7 @@ import com.example.pc24.cbohelp.PartyView.PartyActivity;
 import com.example.pc24.cbohelp.PartyView.mParty;
 import com.example.pc24.cbohelp.R;
 import com.example.pc24.cbohelp.appPreferences.Shareclass;
+import com.facebook.shimmer.ShimmerFrameLayout;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -53,13 +54,14 @@ public class NewPartyActivity extends AppCompatActivity implements SearchView.On
     Shareclass shareclass;
     DatePickerDialog.OnDateSetListener from_dateListener, to_dateListener;
     private Menu menu;
-
+    private ShimmerFrameLayout mShimmerViewContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.actvity_party_layout);
+        mShimmerViewContainer = findViewById(R.id.shimmer_view_container);
         followupdate = (TextView) findViewById(R.id.followdate);
         nextfollowupdate = (TextView) findViewById(R.id.nextfollowdate);
         fromdatebtn = (Button) findViewById(R.id.fromdatebtn);
@@ -70,7 +72,6 @@ public class NewPartyActivity extends AppCompatActivity implements SearchView.On
         Lmissedtype = (LinearLayout) findViewById(R.id.layout_party);
         recyclerView = (RecyclerView) findViewById(R.id.followinguplist);
         Gobtn = (Button) findViewById(R.id.btn_go);
-
         radioGroup = (RadioGroup) findViewById(R.id.viewby);
         entrydate = (RadioButton) findViewById(R.id.entrydate);
         followingdate = (RadioButton) findViewById(R.id.followingdate);
@@ -118,8 +119,6 @@ public class NewPartyActivity extends AppCompatActivity implements SearchView.On
         Gobtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
                 if (!PartyTxt.getText().toString().equals("")) {
                     GetclientDetail(context);
                 } else {
@@ -148,7 +147,6 @@ public class NewPartyActivity extends AppCompatActivity implements SearchView.On
 
             }
         });
-
         todatebtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -172,7 +170,6 @@ public class NewPartyActivity extends AppCompatActivity implements SearchView.On
             @Override
             public void onClick(View view) {
                 fromdatebtn.performClick();
-
             }
         });
         img_nextfollowdate.setOnClickListener(new View.OnClickListener() {
@@ -181,18 +178,6 @@ public class NewPartyActivity extends AppCompatActivity implements SearchView.On
                 todatebtn.performClick();
             }
         });
-
-/*
-        Lmissedtype.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-
-                Intent intent1 = new Intent(NewPartyActivity.this, PartyActivity.class);
-                startActivityForResult(intent1, 0);
-            }
-        });*/
-
         vm_following.setViewby("F");
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -215,46 +200,8 @@ public class NewPartyActivity extends AppCompatActivity implements SearchView.On
 
 
     }
-
-
-
-
-   /* @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 0 && resultCode == RESULT_OK) {
-            vm_following.setParty(new mParty(data.getExtras().getString("Paid"), data.getExtras().getString("Name"),
-                    data.getExtras().getString("Mobile"), data.getExtras().getString("Person"),
-                    data.getExtras().getString("Status")
-            ));
-            GetclientDetail(context);
-        }
-    }*/
-
     private void GetclientDetail(final Context context) {
-
-
-        vm_following.GETFOLLOWCALL(context, new Vm_Following.OnResultlistner() {
-            @Override
-            public void Sucessresult(ArrayList<mFollowupgrid> mFollowupgrids) {
-                mAdapter = new NewPartyActvityAdapter(context, mFollowupgrids);
-
-                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-                recyclerView.setLayoutManager(mLayoutManager);
-                recyclerView.setItemAnimator(new DefaultItemAnimator());
-                recyclerView.setAdapter(mAdapter);
-
-                ViewCompat.setNestedScrollingEnabled(
-                        recyclerView, false);
-
-                //   appBarLayout.setExpanded(false);
-                //appBarLayout.setExpanded(true, true);
-            }
-
-            @Override
-            public void ErrorResult(String Error, String Title) {
-
-            }
-        });
+        vm_following.GETFOLLOWCALL(context);
 
 
     }
@@ -316,9 +263,13 @@ public class NewPartyActivity extends AppCompatActivity implements SearchView.On
     }
 
 
+
+
     @Override
     public void updateparty(mParty party) {
         setPanme(party.getName());
+        mShimmerViewContainer.stopShimmerAnimation();
+        mShimmerViewContainer.setVisibility(View.GONE);
 
     }
 
@@ -326,8 +277,26 @@ public class NewPartyActivity extends AppCompatActivity implements SearchView.On
     public void setPanme(String Panme) {
         PartyTxt.setText(Panme);
         getSupportActionBar().setTitle(PartyTxt.getText().toString());
+        mShimmerViewContainer.stopShimmerAnimation();
+        mShimmerViewContainer.setVisibility(View.GONE);
         // tilte.setText(PartyTxt.getText().toString());
 
+    }
+
+    @Override
+    public void setFollowupdata(ArrayList Followupdata) {
+        mAdapter = new NewPartyActvityAdapter(context, Followupdata);
+
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(mAdapter);
+
+        mShimmerViewContainer.stopShimmerAnimation();
+        mShimmerViewContainer.setVisibility(View.GONE);
+
+        ViewCompat.setNestedScrollingEnabled(
+                recyclerView, false);
     }
 
     @Override
@@ -348,6 +317,17 @@ public class NewPartyActivity extends AppCompatActivity implements SearchView.On
     @Override
     public void setreferby(String referby) {
 
+    }
+    @Override
+    protected void onPostResume() {
+        super.onPostResume ();
+        mShimmerViewContainer.startShimmerAnimation ();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause ();
+        mShimmerViewContainer.stopShimmerAnimation();
     }
 
 

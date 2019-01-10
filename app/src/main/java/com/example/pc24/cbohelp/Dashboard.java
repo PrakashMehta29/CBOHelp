@@ -42,6 +42,17 @@ public class Dashboard extends AppCompatActivity {
         ChatLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                /*shareclass.save (Dashboard.this,"pa_id", "");
+                shareclass.save (Dashboard.this,"name","ALL");
+                shareclass.save (Dashboard.this,"s1", "");
+                shareclass.save (Dashboard.this,"s2","");
+                shareclass.save (Dashboard.this,"who","party_list");
+                shareclass.save (Dashboard.this,"show_report","P");
+                shareclass.save (Dashboard.this,"DOC_NO","");
+                shareclass.save (Dashboard.this,"CLOSED_TAG","Y");
+                */
+
                 Intent intent=new Intent(Dashboard.this,Client_Complain_list.class);
                 intent.putExtra("pa_id", "");
                 intent.putExtra("name","ALL");
@@ -50,6 +61,8 @@ public class Dashboard extends AppCompatActivity {
                 intent.putExtra("who","party_list");
                 intent.putExtra("show_report","P");
                 intent.putExtra("DOC_NO","");
+                intent.putExtra ("CLOSED TAG","Y");
+
 
                 startActivity(intent);
             }

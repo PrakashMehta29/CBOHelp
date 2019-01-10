@@ -8,6 +8,8 @@
 <color name="textcolor">#000000</color>
 <color name="active_filter">#fff</color>
 <color name="SelectedvAlue">#e5e5e5</color>
+    <color name="backgroundshiver">#dddddd</color>
+
 
 </resources>
 

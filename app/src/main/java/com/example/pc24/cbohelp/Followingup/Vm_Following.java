@@ -32,17 +32,15 @@ public class Vm_Following extends ViewModel {
 
     private Custom_Variables_And_Method custom_variables_and_method;
     ArrayList<mFollowupgrid> followupdata = new ArrayList<>();
-    OnResultlistner resultlistner=null;
+
     Shareclass shareclass;
     DBHelper dbHelper;
     ProgressDialog progress1=null;
     private  static final int FOLLOWUP_DIALOG=7;
-
-    private  static final int FOLLOWUPGRID=1;
-
     com.example.pc24.cbohelp.PartyView.mParty mParty;
     IFollowingup iFollowingup=null;
     Integer NEXTFOLLOWUP=0;
+
 
     public String getFromDate() {
         return FromDate;
@@ -71,8 +69,6 @@ public class Vm_Following extends ViewModel {
      String FromDate ="";
      String ToDate ="";
      String Viewby="";
-
-
     public mParty getParty() {
         return mParty;
     }
@@ -102,7 +98,7 @@ public class Vm_Following extends ViewModel {
             @Override
             public void onFollowSubmit() {
 
-                GETFOLLOWCALL(context,resultlistner);
+                GETFOLLOWCALL(context);
 
             }
 
@@ -116,11 +112,9 @@ public class Vm_Following extends ViewModel {
     public Vm_Following() {
 
         super();
-
         custom_variables_and_method = Custom_Variables_And_Method.getInstance();
         dbHelper = new DBHelper(context);
         shareclass=new  Shareclass();
-
     }
 
 
@@ -131,31 +125,15 @@ public class Vm_Following extends ViewModel {
     public interface OnResultlistner{
         void Sucessresult(ArrayList<mFollowupgrid> mFollowupgrids);
         void ErrorResult(String Error, String Title);
-
+    }
+    public void GETFOLLOWCALL(Context context){
+            getFollowdata( (Activity)context);
 
     }
-    public void GETFOLLOWCALL(Context context, OnResultlistner resultlistner){
-
-
-        if(mFollowupgrids==null){
-            getFollowdata( (Activity)context,resultlistner,iFollowingup);
-        }else {
-            resultlistner.Sucessresult(mFollowupgrids);
-        }
-
-    }
-    public void getFollowdata(Activity context, OnResultlistner listner, IFollowingup ifollowingup)
+    public void getFollowdata(Activity context)
     {
 
-
-
-
-        resultlistner=listner;
-        iFollowingup=ifollowingup;
-
-
         HashMap<String, String> request = new HashMap<>();
-
         request.put("sDbName", shareclass.getValue(context, "company_code", "demo"));
         request.put("iPaId",getParty().getId());
         request.put("sFormType", "ORDER_STATUS_FOLLOWUP");
@@ -166,14 +144,14 @@ public class Vm_Following extends ViewModel {
         tables.add(0);
         tables.add(1);
 
-
-
         new MyAPIService(context)
                 .execute(new ResponseBuilder("FollowUpGrid",request)
                         .setTables(tables).setResponse(new CBOServices.APIResponse() {
                             @Override
                             public void onComplete(Bundle message) {
-                                resultlistner.Sucessresult(followupdata);
+                                if (iFollowingup!=null)
+                                    iFollowingup.setFollowupdata(followupdata);
+
                             }
 
                             @Override
@@ -204,7 +182,6 @@ public class Vm_Following extends ViewModel {
                     for (int i = 0; i < jsonArray1.length(); i++) {
                         JSONObject c = jsonArray1.getJSONObject(i);
                         mFollowupgrid mFollow = new mFollowupgrid();
-
                         String paid = c.getString("PA_ID");
                         mFollow.setpAID(paid);
                         String name = c.getString("PA_NAME");
@@ -232,15 +209,10 @@ public class Vm_Following extends ViewModel {
                         String nxtfollow = c.getString("NEXTFOLLOWUPDATE");
                         //mFollow.setnEXTFOLLOWUPDATE(nxtfollow);
                        mFollow.setnEXTFOLLOWUPDATE(nxtfollow.substring(0,nxtfollow.indexOf(" ")));
-
-
                         String contactPerson = c.getString("CONTACT_PERSON");
                         mFollow.setcONTACTPERSON(convert(contactPerson));
                         String freamrk = c.getString("FREMARK");mFollow.setfREMARK(freamrk);
                         followupdata.add(mFollow);
-
-
-
 
                     }
 
@@ -251,18 +223,7 @@ public class Vm_Following extends ViewModel {
                         JSONObject b = jsonArray.getJSONObject(j);
                         NEXTFOLLOWUP = b.getInt("NEXTFOLLOWUP");
                     }
-                    //resultlistner.Sucessresult(followupdata);
-                   /* if (iFollowingup != null)
-                        iFollowingup.updateparty(followupdata.size() > 0? followupdata.get(0) : new mFollowupgrid());*/
-                    //progress1.dismiss();
-
-
-
-
-
                 } catch (Exception e) {
-
-                    //progress1.dismiss();
                     e.printStackTrace();
                 }
             }

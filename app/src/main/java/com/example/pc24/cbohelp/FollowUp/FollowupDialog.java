@@ -125,6 +125,7 @@ import java.util.Locale;
 
         nextfollowup_Date = (Button) view.findViewById(R.id.nextfollowdatebtn);
         nextfollowup_Date.setText(CustomDatePicker.currentDate( CustomDatePicker.ShowFormat));
+
         Current_Date=CustomDatePicker.currentDate(CustomDatePicker.CommitFormat);
         shareclass = new Shareclass();
 

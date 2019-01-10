@@ -50,11 +50,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
-import com.example.pc24.cbohelp.Followingup.NewPartyActivity;
-import com.example.pc24.cbohelp.PartyView.PartyActivity;
-import com.example.pc24.cbohelp.adaptor.New_order_confirm_Adaptor;
 import com.example.pc24.cbohelp.adaptor.ComplainList_Adapter;
+import com.example.pc24.cbohelp.adaptor.New_order_confirm_Adaptor;
 import com.example.pc24.cbohelp.appPreferences.Shareclass;
 import com.example.pc24.cbohelp.dbHelper.DBHelper;
 import com.example.pc24.cbohelp.services.CboServices_Old;
@@ -62,6 +59,7 @@ import com.example.pc24.cbohelp.utils.Custom_Variables_And_Method;
 import com.example.pc24.cbohelp.utils.GalleryUtil;
 import com.example.pc24.cbohelp.utils.ImageFilePath;
 import com.example.pc24.cbohelp.utils.SendMailTask;
+import com.facebook.shimmer.ShimmerFrameLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -101,7 +99,7 @@ public class Client_Complain_list extends AppCompatActivity implements SearchVie
     FloatingActionButton add_complain;
     Context context;
     int order_position=0;
-    String PA_ID,STATUS,s1,s2,who,show_report="P",updated_complain,Login_user;
+    String PA_ID,STATUS,s1,s2,who,show_report="P",updated_complain,Login_user,Closed_Tag="";
     SearchView searchView;
     MenuItem searchMenuItem;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -122,48 +120,87 @@ public class Client_Complain_list extends AppCompatActivity implements SearchVie
 
     HashMap<String, ArrayList<String>> team_list;
     private static final int CODE_DRAW_OVER_OTHER_APP_PERMISSION = 2084;
+    private String Managercall="";
+    private ShimmerFrameLayout mShimmerViewContainer;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_client_complain_list);
+        super.onCreate (savedInstanceState);
+        setContentView (R.layout.activity_client_complain_list);
+        mShimmerViewContainer = findViewById (R.id.shimmer_view_container);
+        listView = (ListView) findViewById (R.id.client_order_list);
+        all = (Button) findViewById (R.id.all);
+        pending = (Button) findViewById (R.id.pending);
+        complete = (Button) findViewById (R.id.complete);
+        add_complain = (FloatingActionButton) findViewById (R.id.add_complain);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById (R.id.swiperefresh);
 
-        listView= (ListView) findViewById(R.id.client_order_list);
-        all= (Button) findViewById(R.id.all);
-        pending= (Button) findViewById(R.id.pending);
-        complete= (Button) findViewById(R.id.complete);
-        add_complain = (FloatingActionButton) findViewById(R.id.add_complain);
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
+
+        progress1 = new ProgressDialog (this);
+        adaptor_data = new ArrayList<> ();
+        adaptor_data_alert = new ArrayList<> ();
+        swipeRefreshLayout.setOnRefreshListener (this);
+
+        Intent intent = getIntent ();
 
 
-        progress1 = new ProgressDialog(this);
-        adaptor_data=new ArrayList<>();
-        adaptor_data_alert=new ArrayList<>();
-        swipeRefreshLayout.setOnRefreshListener(this);
 
-        Intent intent=getIntent();
-        PA_ID=intent.getStringExtra("pa_id");
-        name=intent.getStringExtra("name");
-        s1=intent.getStringExtra("s1");
-        s2=intent.getStringExtra("s2");
-        who=intent.getStringExtra("who");
-        show_report=intent.getStringExtra("show_report");
-        updated_complain=intent.getStringExtra("DOC_NO");
-        getSupportActionBar().setTitle(name);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        shareclass=new Shareclass();
-        customVariablesAndMethod=Custom_Variables_And_Method.getInstance();
-        context=this;
-        dbHelper=new DBHelper(this);
-        Login_user = shareclass.getValue(this,"PA_ID","0");
-        shareclass.save(context,"filter_type","");
+       /* if(intent!=null && getIntent ()!=null){
+            PA_ID = intent.getStringExtra ("pa_id");
+            name = intent.getStringExtra ("name");
+            s1 = intent.getStringExtra ("s1");
+            s2 = intent.getStringExtra ("s2");
+            who = intent.getStringExtra ("who");
+            show_report = intent.getStringExtra ("show_report");
+            updated_complain = intent.getStringExtra ("DOC_NO");
+            }
+        else{
+            PA_ID =shareclass.getValue (context,"pa_id","");
+            name = shareclass.getValue (context,"name","");
+            s1 =shareclass.getValue (context,"s1","");
+            s2 =shareclass.getValue (context,"s2","");
+            who =shareclass.getValue (context,"who","");
+            show_report = shareclass.getValue (context,"show_report","");
+            updated_complain =shareclass.getValue (context,"DOC_NO","");
+            Closed_Tag=shareclass.getValue (this,"CLOSED_TAG","");
 
-        if (getSupportActionBar() != null && who.equals("add")){
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            mUri = intent.getParcelableExtra("URI");
-            Add_cpmplain();
+            }*/
+        PA_ID = intent.getStringExtra ("pa_id");
+        name = intent.getStringExtra ("name");
+        s1 = intent.getStringExtra ("s1");
+        s2 = intent.getStringExtra ("s2");
+        who = intent.getStringExtra ("who");
+        show_report = intent.getStringExtra ("show_report");
+        updated_complain = intent.getStringExtra ("DOC_NO");
+
+
+        getSupportActionBar ().setTitle (name);
+        getSupportActionBar ().setDisplayHomeAsUpEnabled (true);
+        shareclass = new Shareclass ();
+        customVariablesAndMethod = Custom_Variables_And_Method.getInstance ();
+        context = this;
+        dbHelper = new DBHelper (this);
+        Login_user = shareclass.getValue (this, "PA_ID", "0");
+        shareclass.save (context, "filter_type", "");
+        String whovalue = shareclass.getValue (this, "add", "");
+        if (getSupportActionBar () != null && who.equals ("add")) {
+            getSupportActionBar ().setDisplayHomeAsUpEnabled (true);
+            mUri = intent.getParcelableExtra ("URI");
+            Add_cpmplain ();
         }
+
+        else if (getSupportActionBar () != null && who.equals (whovalue)){
+            getSupportActionBar ().setDisplayHomeAsUpEnabled (true);
+            mUri = intent.getParcelableExtra ("URI");
+            Add_cpmplain ();
+
+        }
+
+
+
+
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
 
@@ -217,8 +254,44 @@ public class Client_Complain_list extends AppCompatActivity implements SearchVie
             pending.setBackgroundResource(R.drawable.tab_deselected);
         }
 
+   /*     Closed_Tag=intent.getStringExtra ("CLOSED_TAG");
 
-        team_list=dbHelper.getTeam("");
+       // team_list=dbHelper.getTeam("");
+        if (Closed_Tag=="1") {
+            Closed_Tag = "0";
+
+            if (!shareclass.getValue (context, "CATEGORY", "").equalsIgnoreCase ("ADMIN")) {
+                team_list = dbHelper.getManager ("");
+
+            } else {
+                team_list = dbHelper.getTeam ("");
+
+            }
+
+        } else*/ if (!shareclass.getValue (context, "CATEGORY", "").equalsIgnoreCase ("ADMIN")) {
+            team_list = dbHelper.getManager ("");
+
+
+          /*  Closed_Tag="1";
+            if(intent.getStringExtra ("CLOSED_TAG")!=null){
+                if(intent.getStringExtra ("CLOSED_TAG").equals ("0")){
+                    Closed_Tag="0";
+                }
+
+            }
+            else if(Closed_Tag==""){
+
+                Closed_Tag="0";
+            }
+*/
+
+
+
+        } else {
+            team_list = dbHelper.getTeam ("");
+
+        }
+
         //adaptor_data=dbHelper.getComplaint("P",PA_ID);
 
         //order_list_adaptor=new Order_List_Adaptor(this,adaptor_data);
@@ -231,7 +304,7 @@ public class Client_Complain_list extends AppCompatActivity implements SearchVie
                     getdata("");
                     //adaptor_data=dbHelper.getOrder("ALL",PA_ID);
                     //order_list_adaptor=new Order_List_Adaptor(context,adaptor_data);
-                   // listView.setAdapter(order_list_adaptor);
+                    // listView.setAdapter(order_list_adaptor);
                     LastReport="";
                     //adaptor_data.clear();
                     order_id.clear();
@@ -249,9 +322,9 @@ public class Client_Complain_list extends AppCompatActivity implements SearchVie
             public void onClick(View view) {
                 if(!LastReport.equals("P")) {
                     getdata("P");
-                   // adaptor_data=dbHelper.getOrder("P",PA_ID);
-                   // order_list_adaptor=new Order_List_Adaptor(context,adaptor_data);
-                   // listView.setAdapter(order_list_adaptor);
+                    // adaptor_data=dbHelper.getOrder("P",PA_ID);
+                    // order_list_adaptor=new Order_List_Adaptor(context,adaptor_data);
+                    // listView.setAdapter(order_list_adaptor);
                     LastReport="P";
                     //adaptor_data.clear();
                     pending.setBackgroundResource(R.drawable.tab_selected);
@@ -265,9 +338,9 @@ public class Client_Complain_list extends AppCompatActivity implements SearchVie
             public void onClick(View view) {
                 if(!LastReport.equals("C")) {
                     getdata("C");
-                   // adaptor_data=dbHelper.getOrder("C",PA_ID);
-                   // order_list_adaptor=new Order_List_Adaptor(context,adaptor_data);
-                   // listView.setAdapter(order_list_adaptor);
+                    // adaptor_data=dbHelper.getOrder("C",PA_ID);
+                    // order_list_adaptor=new Order_List_Adaptor(context,adaptor_data);
+                    // listView.setAdapter(order_list_adaptor);
                     LastReport="C";
                     //adaptor_data.clear();
                     complete.setBackgroundResource(R.drawable.tab_selected);
@@ -296,7 +369,7 @@ public class Client_Complain_list extends AppCompatActivity implements SearchVie
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-               show_Order_alert(position,0);
+                show_Order_alert(position,0);
             }
         });
 
@@ -389,12 +462,54 @@ public class Client_Complain_list extends AppCompatActivity implements SearchVie
         int id = item.getItemId();
         switch (id){
             case R.id.logout :
-                shareclass.save(this,"PA_ID","0");
-                startActivity(new Intent(Client_Complain_list.this,Login.class));
-                finish();
+
+
+
+                if (!shareclass.getValue (context, "CATEGORY", "").equalsIgnoreCase ("ADMIN")) {
+                    team_list = dbHelper.getManager ("");
+                    Closed_Tag = "1";
+                    Intent intent = getIntent ();
+                    if (intent.getStringExtra ("CLOSED_TAG") != null) {
+                        if (intent.getStringExtra ("CLOSED_TAG").equals ("0")) {
+                            Closed_Tag = "0";
+                        }
+
+                    } else if (Closed_Tag == "") {
+
+                        Closed_Tag = "0";
+                    }
+
+                }else{
+                    shareclass.save(this,"PA_ID","0");
+                    startActivity(new Intent(Client_Complain_list.this,Login.class));
+                    finish();
+                }
+
                 break;
             case android.R.id.home:
-                finish();
+
+
+                if (Closed_Tag.equals ("1")) {
+
+                    Intent intent=new Intent ( this,Client_Complain_list.class);
+                    intent.putExtra("pa_id", "");
+                    intent.putExtra("name","ALL");
+                    intent.putExtra("s1", "");
+                    intent.putExtra("s2","");
+                    intent.putExtra("who","party_list");
+                    intent.putExtra("show_report","p");
+                    intent.putExtra("DOC_NO","");
+                    intent.putExtra ("CLOSED_TAG","0");
+
+                    startActivity (intent);
+
+
+                }
+                else if(Closed_Tag=="0"){
+                    finish ();
+                }
+                else{ finish();}
+
                 break;
             case R.id.change_view:
                 break;
@@ -430,10 +545,33 @@ public class Client_Complain_list extends AppCompatActivity implements SearchVie
                 if (id==-1){
                     Login_user = shareclass.getValue(this,"PA_ID","0");
                     getSupportActionBar().setTitle(name);
-                }else{
+                }
+                else if(!shareclass.getValue(context,"CATEGORY","").equalsIgnoreCase("ADMIN")){
+
+                    Closed_Tag = "1";
+                    Intent intent = getIntent ();
+                    if (intent.getStringExtra ("CLOSED_TAG") != null) {
+                        if (intent.getStringExtra ("CLOSED_TAG").equals ("0")) {
+                            Closed_Tag = "0";
+                        }
+
+                    } else if (Closed_Tag == "") {
+
+                        Closed_Tag = "0";
+                    }
+                    getSupportActionBar().setTitle(team_list.get("PA_NAME").get(id));
+
+
+                    team_list = dbHelper.getTeam ("");
+
+                }
+                else{
                     Login_user = team_list.get("PA_ID").get(id);
+
                     getSupportActionBar().setTitle(team_list.get("PA_NAME").get(id));
                 }
+
+
                 //adaptor_data.clear();
                 getdata(LastReport);
                 //finish();
@@ -442,7 +580,72 @@ public class Client_Complain_list extends AppCompatActivity implements SearchVie
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        // TODO Auto-generated method stub
+        menu.clear();
 
+
+/*
+
+        if(Managercall=="yes"){
+
+            if (getSupportActionBar() != null && !who.equals("add")) {
+
+                if (team_list.get("PA_ID").size() > 0) {
+                    menu.add(0, -1, Menu.NONE, name);
+                }
+
+                for (int i = 0; i < team_list.get("PA_NAME").size(); i++) {
+                    menu.add(0, i, Menu.NONE, team_list.get("PA_NAME").get(i));
+                }
+            }
+
+        }
+        else if (!shareclass.getValue(context,"CATEGORY","").equalsIgnoreCase("ADMIN")) {
+            //team_list = dbHelper.getManager ("");
+
+
+
+            if (getSupportActionBar() != null && !who.equals("add")) {
+
+                if(team_list.get ("PA_ID").size ()>0)
+                {    menu.add(0, -1, Menu.NONE, name);
+                }
+
+                for (int i = 0; i < team_list.get("PA_NAME").size(); i++) {
+                    menu.add(0, i, Menu.NONE, team_list.get("PA_NAME").get(i));
+                }
+            }
+
+        }
+
+        else{
+            // team_list = dbHelper.getTeam ("");
+            if (getSupportActionBar() != null && !who.equals("add")) {
+
+                if (team_list.get("PA_ID").size() > 0) {
+                    menu.add(0, -1, Menu.NONE, name);
+                }
+
+                for (int i = 0; i < team_list.get("PA_NAME").size(); i++) {
+                    menu.add(0, i, Menu.NONE, team_list.get("PA_NAME").get(i));
+                }
+            }
+        }
+*/
+        if (getSupportActionBar() != null && !who.equals("add")) {
+
+            if (team_list.get("PA_ID").size() > 0) {
+                menu.add(0, -1, Menu.NONE, name);
+            }
+
+            for (int i = 0; i < team_list.get("PA_NAME").size(); i++) {
+                menu.add(0, i, Menu.NONE, team_list.get("PA_NAME").get(i));
+            }
+        }
+        return super.onPrepareOptionsMenu(menu);
+    }
     @Override
     public boolean onCreateOptionsMenu(android.view.Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -457,7 +660,11 @@ public class Client_Complain_list extends AppCompatActivity implements SearchVie
         searchView.setSubmitButtonEnabled(true);
         searchView.setOnQueryTextListener(this);
 
-        if (getSupportActionBar() != null && !who.equals("add")) {
+
+
+
+       /* if (getSupportActionBar() != null && !who.equals("add")) {
+
             if (team_list.get("PA_ID").size() > 0) {
                 menu.add(0, -1, Menu.NONE, name);
             }
@@ -466,6 +673,17 @@ public class Client_Complain_list extends AppCompatActivity implements SearchVie
                 menu.add(0, i, Menu.NONE, team_list.get("PA_NAME").get(i));
             }
         }
+
+        else if(team_list.get ("MANAGER_PA_ID").size ()>0)
+        {    menu.add(0, -1, Menu.NONE, name);
+        }
+
+        for (int i = 0; i < team_list.get("").size(); i++) {
+            menu.add(0, i, Menu.NONE, team_list.get("MANAGER_NAME").get(i));
+        }
+*/
+
+
 
         MenuItem item = menu.findItem(R.id.general_view);
         item.setVisible(false);
@@ -649,26 +867,26 @@ public class Client_Complain_list extends AppCompatActivity implements SearchVie
 
     private void complain_commit(){
 
-            //Start of call to service
+        //Start of call to service
 
-            HashMap<String, String> request = new HashMap<>();
-            request.put("sDbName", shareclass.getValue(Client_Complain_list.this, "company_code", "demo"));
-            request.put("iPaId", PA_ID);
-            request.put("sRemark", Remark);
-            request.put("iAUSER_ID", shareclass.getValue(this, "PA_ID", "0"));
-            request.put("sAttachment", filename);
+        HashMap<String, String> request = new HashMap<>();
+        request.put("sDbName", shareclass.getValue(Client_Complain_list.this, "company_code", "demo"));
+        request.put("iPaId", PA_ID);
+        request.put("sRemark", Remark);
+        request.put("iAUSER_ID", shareclass.getValue(this, "PA_ID", "0"));
+        request.put("sAttachment", filename);
 
-            ArrayList<Integer> tables = new ArrayList<>();
-            tables.add(0);
+        ArrayList<Integer> tables = new ArrayList<>();
+        tables.add(0);
 
-            progress1.setMessage("Please Wait..");
-            progress1.setCancelable(false);
-            progress1.show();
+        progress1.setMessage("Please Wait..");
+        progress1.setCancelable(false);
+        progress1.show();
 
-            new CboServices_Old(Client_Complain_list.this, mHandler).customMethodForAllServices(request, "ComplaintCommit", MESSAGE_INTERNET_COMPLAIN_COMIT, tables);
+        new CboServices_Old(Client_Complain_list.this, mHandler).customMethodForAllServices(request, "ComplaintCommit", MESSAGE_INTERNET_COMPLAIN_COMIT, tables);
 
-            //End of call to service
-            update_list = false;
+        //End of call to service
+        update_list = false;
 
 
     }
@@ -807,6 +1025,8 @@ public class Client_Complain_list extends AppCompatActivity implements SearchVie
                 }
                 order_list_adaptor=new ComplainList_Adapter(context,adaptor_data,who,updated_complain);
                 listView.setAdapter(order_list_adaptor);
+                mShimmerViewContainer.stopShimmerAnimation();
+                mShimmerViewContainer.setVisibility(View.GONE);
                 swipeRefreshLayout.setRefreshing(false);
                 progress1.dismiss();
                 if (shareclass.getValue(this,"filter_type","").equals("P")){
@@ -833,6 +1053,18 @@ public class Client_Complain_list extends AppCompatActivity implements SearchVie
     }
 
 
+    @Override
+    protected void onPostResume() {
+        super.onPostResume ();
+        mShimmerViewContainer.startShimmerAnimation ();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause ();
+        mShimmerViewContainer.stopShimmerAnimation();
+    }
+
     public void parser3(Bundle result) {
         if (result!=null ) {
 
@@ -852,7 +1084,7 @@ public class Client_Complain_list extends AppCompatActivity implements SearchVie
 
                 }
 
-               // Remark="";
+                // Remark="";
                 filename="";
                 //updated_complain="";
                 //Status="";
@@ -1084,7 +1316,7 @@ public class Client_Complain_list extends AppCompatActivity implements SearchVie
                             filename =path.substring(path.lastIndexOf("/")+1 );
                             filename=web_root_path.substring(web_root_path.indexOf("/",1))+filename;
                         }
-                       Update_Complaint();
+                        Update_Complaint();
                     }
                 }
                 dialog.dismiss();
@@ -1449,10 +1681,38 @@ public class Client_Complain_list extends AppCompatActivity implements SearchVie
         getdata(LastReport);
         //adaptor_data.clear();
     }
-   /* @Override
+    @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        Intent intent=new Intent(Client_Complain_list.this,Dashboard.class);
-        startActivity(intent);
-    }*/
+        super.onBackPressed ();
+
+
+        if (Closed_Tag.equals ("1")) {
+
+            Intent intent = new Intent (this, Client_Complain_list.class);
+            intent.putExtra ("pa_id", "");
+            intent.putExtra ("name", "ALL");
+            intent.putExtra ("s1", "");
+            intent.putExtra ("s2", "");
+            intent.putExtra ("who", "party_list");
+            intent.putExtra ("show_report", "p");
+            intent.putExtra ("DOC_NO", "");
+            intent.putExtra ("CLOSED_TAG", "0");
+
+            startActivity (intent);
+
+
+        }
+        else if(Closed_Tag=="0"){
+            finish ();
+        }
+
+       /* else if(Closed_Tag=="0"){
+            finish ();
+        }*/
+        else {
+            finish ();
+        }
+
+
+    }
 }

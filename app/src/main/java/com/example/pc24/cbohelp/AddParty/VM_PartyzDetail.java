@@ -41,15 +41,7 @@ public class VM_PartyzDetail
     String Existingid="";
 
 
-
-
-
-
-
     public String getPartyid( ) {
-
-
-
         return Partyid;
     }
 

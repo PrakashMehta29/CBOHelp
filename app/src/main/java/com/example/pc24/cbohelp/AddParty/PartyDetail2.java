@@ -154,7 +154,7 @@ public class PartyDetail2 extends AppCompatActivity implements  Isubmit {
         CompspinImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               ComponeyType.performClick();
+                ComponeyType.performClick();
             }
         });
         UserSpingImg.setOnClickListener(new View.OnClickListener() {

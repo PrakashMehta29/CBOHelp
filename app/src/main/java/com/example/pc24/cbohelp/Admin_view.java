@@ -78,8 +78,11 @@ public class Admin_view extends AppCompatActivity implements SearchView.OnQueryT
 */
         Intent intent=getIntent();
         getSupportActionBar().setTitle(intent.getStringExtra("title"));
-
-        team_list=dbHelper.getTeam("");
+        if (!shareclass.getValue(context,"CATEGORY","").equalsIgnoreCase("ADMIN")) {
+            team_list = dbHelper.getManager ("");
+        }else{
+            team_list = dbHelper.getTeam ("");
+        }
         Login_user = shareclass.getValue(this,"PA_ID","0");
         getdata(true);
 

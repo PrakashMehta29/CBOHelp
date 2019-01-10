@@ -531,5 +531,34 @@ public class DBHelper extends SQLiteOpenHelper {
         return Party;
     };
 
+
+
+    public HashMap<String, ArrayList<String>> getManager(String ID) {
+        HashMap<String, ArrayList<String>> Party = new HashMap<String, ArrayList<String>>();
+        ArrayList<String> PA_ID = new ArrayList<String>();
+        ArrayList<String> PA_NAME = new ArrayList<String>();
+
+        //hp = new HashMap();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res;
+        if(ID.equals("")){
+            res =  db.rawQuery( "select * from (select PA_ID,PA_NAME,MANAGER_ID,MANAGER_NAME from "+TEAM_TABLE+" Group by PA_ID,PA_NAME,MANAGER_ID,MANAGER_NAME)T where T.MANAGER_ID!='' or T. MANAGER_NAME!=''" , null );
+
+        }else {
+            res = db.rawQuery("select * from (select PA_ID,PA_NAME,MANAGER_ID,MANAGER_NAME from " + TEAM_TABLE +" Group by PA_ID,PA_NAME,MANAGER_ID,MANAGER_NAME" + " where PA_ID='" + ID + "' )T where T.MANAGER_ID!='' or T. MANAGER_NAME!=''" , null);
+        }
+        res.moveToFirst();
+
+        while(!res.isAfterLast()){
+            PA_ID.add(res.getString(res.getColumnIndex("MANAGER_ID")));
+            PA_NAME.add(res.getString(res.getColumnIndex("MANAGER_NAME")));
+            res.moveToNext();
+        }
+        Party.put("PA_ID",PA_ID);
+        Party.put("PA_NAME",PA_NAME);
+        return Party;
+    };
+
+
     /// team table ends here
 }

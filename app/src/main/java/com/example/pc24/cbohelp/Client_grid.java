@@ -80,7 +80,15 @@ public class Client_grid extends AppCompatActivity implements SearchView.OnQuery
         what_to_do=intent.getStringExtra("what_to_do");
         getSupportActionBar().setTitle(intent.getStringExtra("title"));
 
-        team_list=dbHelper.getTeam("");
+      //  team_list=dbHelper.getTeam("");
+
+
+        if (!shareclass.getValue(context,"CATEGORY","").equalsIgnoreCase("ADMIN")) {
+            team_list = dbHelper.getManager ("");
+        }else{
+            team_list = dbHelper.getTeam ("");
+        }
+
         Login_user = shareclass.getValue(this,"PA_ID","0");
         getdata(true);
 
